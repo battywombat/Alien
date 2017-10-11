@@ -7,8 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D92329A21F8C66ED00005A26 /* ParserTests.m */; };
+		D92329A51F8C7D3600005A26 /* TypeManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D92329A41F8C7D3600005A26 /* TypeManagerTests.m */; };
+		D9348ED31F8739730095FB29 /* ClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED21F8739730095FB29 /* ClassDefinition.m */; };
+		D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED61F873B360095FB29 /* MethodDefinition.m */; };
+		D96312261F8D9853004E1E0D /* RadixTree.m in Sources */ = {isa = PBXBuildFile; fileRef = D96312251F8D9853004E1E0D /* RadixTree.m */; };
+		D96312291F8D9868004E1E0D /* RadixNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D96312281F8D9868004E1E0D /* RadixNode.m */; };
 		D97F6CC41F83042D00C5C6AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CC31F83042D00C5C6AA /* main.m */; };
+		D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
+		D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
+		D9F550F41F87F16800201D7D /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F31F87F16800201D7D /* Parser.m */; };
+		D9F550F81F897A5000201D7D /* TypeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F71F897A5000201D7D /* TypeManager.m */; };
+		D9F551001F8BF92D00201D7D /* TokenizerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */; };
+		D9F551071F8BFFFA00201D7D /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
+		D9F551081F8BFFFF00201D7D /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
+		D9F5510B1F8C001800201D7D /* ClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED21F8739730095FB29 /* ClassDefinition.m */; };
+		D9F5510C1F8C001D00201D7D /* MethodDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED61F873B360095FB29 /* MethodDefinition.m */; };
+		D9F5510D1F8C002100201D7D /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F31F87F16800201D7D /* Parser.m */; };
+		D9F5510E1F8C002400201D7D /* TypeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F71F897A5000201D7D /* TypeManager.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D9F551091F8C000A00201D7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D97F6CB81F83042D00C5C6AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D97F6CBF1F83042D00C5C6AA;
+			remoteInfo = Alien;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		D97F6CBE1F83042D00C5C6AA /* CopyFiles */ = {
@@ -23,12 +50,40 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D92329A21F8C66ED00005A26 /* ParserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParserTests.m; sourceTree = "<group>"; };
+		D92329A41F8C7D3600005A26 /* TypeManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeManagerTests.m; sourceTree = "<group>"; };
+		D9348ED21F8739730095FB29 /* ClassDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassDefinition.m; sourceTree = "<group>"; };
+		D9348ED41F8739830095FB29 /* ClassDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassDefinition.h; sourceTree = "<group>"; };
+		D9348ED51F873B120095FB29 /* MethodDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodDefinition.h; sourceTree = "<group>"; };
+		D9348ED61F873B360095FB29 /* MethodDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodDefinition.m; sourceTree = "<group>"; };
+		D96312241F8D9853004E1E0D /* RadixTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RadixTree.h; sourceTree = "<group>"; };
+		D96312251F8D9853004E1E0D /* RadixTree.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RadixTree.m; sourceTree = "<group>"; };
+		D96312271F8D9868004E1E0D /* RadixNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RadixNode.h; sourceTree = "<group>"; };
+		D96312281F8D9868004E1E0D /* RadixNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RadixNode.m; sourceTree = "<group>"; };
 		D97F6CC01F83042D00C5C6AA /* Alien */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Alien; sourceTree = BUILT_PRODUCTS_DIR; };
 		D97F6CC31F83042D00C5C6AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D97F6CCD1F83075E00C5C6AA /* Alien.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Alien.h; sourceTree = "<group>"; };
+		D97F6CCE1F83075E00C5C6AA /* Alien.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Alien.m; sourceTree = "<group>"; };
+		D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPPTokenizer.m; sourceTree = "<group>"; };
+		D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPPTokenizer.h; sourceTree = "<group>"; };
+		D9F550F31F87F16800201D7D /* Parser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Parser.m; sourceTree = "<group>"; };
+		D9F550F51F87F17200201D7D /* Parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
+		D9F550F61F897A2400201D7D /* TypeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeManager.h; sourceTree = "<group>"; };
+		D9F550F71F897A5000201D7D /* TypeManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeManager.m; sourceTree = "<group>"; };
+		D9F550FD1F8BF92D00201D7D /* Alien-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Alien-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenizerTests.m; sourceTree = "<group>"; };
+		D9F551011F8BF92D00201D7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D97F6CBD1F83042D00C5C6AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9F550FA1F8BF92D00201D7D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				D97F6CC21F83042D00C5C6AA /* Alien */,
+				D9F550FE1F8BF92D00201D7D /* Alien-Tests */,
 				D97F6CC11F83042D00C5C6AA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				D97F6CC01F83042D00C5C6AA /* Alien */,
+				D9F550FD1F8BF92D00201D7D /* Alien-Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,8 +115,35 @@
 			isa = PBXGroup;
 			children = (
 				D97F6CC31F83042D00C5C6AA /* main.m */,
+				D97F6CCD1F83075E00C5C6AA /* Alien.h */,
+				D97F6CCE1F83075E00C5C6AA /* Alien.m */,
+				D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */,
+				D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */,
+				D9348ED21F8739730095FB29 /* ClassDefinition.m */,
+				D9348ED41F8739830095FB29 /* ClassDefinition.h */,
+				D9348ED51F873B120095FB29 /* MethodDefinition.h */,
+				D9348ED61F873B360095FB29 /* MethodDefinition.m */,
+				D9F550F31F87F16800201D7D /* Parser.m */,
+				D9F550F51F87F17200201D7D /* Parser.h */,
+				D9F550F61F897A2400201D7D /* TypeManager.h */,
+				D9F550F71F897A5000201D7D /* TypeManager.m */,
+				D96312241F8D9853004E1E0D /* RadixTree.h */,
+				D96312251F8D9853004E1E0D /* RadixTree.m */,
+				D96312271F8D9868004E1E0D /* RadixNode.h */,
+				D96312281F8D9868004E1E0D /* RadixNode.m */,
 			);
 			path = Alien;
+			sourceTree = "<group>";
+		};
+		D9F550FE1F8BF92D00201D7D /* Alien-Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */,
+				D9F551011F8BF92D00201D7D /* Info.plist */,
+				D92329A21F8C66ED00005A26 /* ParserTests.m */,
+				D92329A41F8C7D3600005A26 /* TypeManagerTests.m */,
+			);
+			path = "Alien-Tests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +166,24 @@
 			productReference = D97F6CC01F83042D00C5C6AA /* Alien */;
 			productType = "com.apple.product-type.tool";
 		};
+		D9F550FC1F8BF92D00201D7D /* Alien-Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9F551021F8BF92D00201D7D /* Build configuration list for PBXNativeTarget "Alien-Tests" */;
+			buildPhases = (
+				D9F550F91F8BF92D00201D7D /* Sources */,
+				D9F550FA1F8BF92D00201D7D /* Frameworks */,
+				D9F550FB1F8BF92D00201D7D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D9F5510A1F8C000A00201D7D /* PBXTargetDependency */,
+			);
+			name = "Alien-Tests";
+			productName = "Alien-Tests";
+			productReference = D9F550FD1F8BF92D00201D7D /* Alien-Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +194,10 @@
 				ORGANIZATIONNAME = "Paul Warner";
 				TargetAttributes = {
 					D97F6CBF1F83042D00C5C6AA = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+					D9F550FC1F8BF92D00201D7D = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
 					};
@@ -110,20 +216,63 @@
 			projectRoot = "";
 			targets = (
 				D97F6CBF1F83042D00C5C6AA /* Alien */,
+				D9F550FC1F8BF92D00201D7D /* Alien-Tests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D9F550FB1F8BF92D00201D7D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D97F6CBC1F83042D00C5C6AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9F550F81F897A5000201D7D /* TypeManager.m in Sources */,
 				D97F6CC41F83042D00C5C6AA /* main.m in Sources */,
+				D96312291F8D9868004E1E0D /* RadixNode.m in Sources */,
+				D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */,
+				D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */,
+				D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */,
+				D9F550F41F87F16800201D7D /* Parser.m in Sources */,
+				D96312261F8D9853004E1E0D /* RadixTree.m in Sources */,
+				D9348ED31F8739730095FB29 /* ClassDefinition.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9F550F91F8BF92D00201D7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */,
+				D9F5510E1F8C002400201D7D /* TypeManager.m in Sources */,
+				D9F5510D1F8C002100201D7D /* Parser.m in Sources */,
+				D9F5510C1F8C001D00201D7D /* MethodDefinition.m in Sources */,
+				D9F5510B1F8C001800201D7D /* ClassDefinition.m in Sources */,
+				D9F551081F8BFFFF00201D7D /* CPPTokenizer.m in Sources */,
+				D92329A51F8C7D3600005A26 /* TypeManagerTests.m in Sources */,
+				D9F551071F8BFFFA00201D7D /* Alien.m in Sources */,
+				D9F551001F8BF92D00201D7D /* TokenizerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D9F5510A1F8C000A00201D7D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D97F6CBF1F83042D00C5C6AA /* Alien */;
+			targetProxy = D9F551091F8C000A00201D7D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D97F6CC51F83042D00C5C6AA /* Debug */ = {
@@ -245,6 +394,30 @@
 			};
 			name = Release;
 		};
+		D9F551031F8BF92D00201D7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Alien-Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.pwarner.Alien-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D9F551041F8BF92D00201D7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Alien-Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.pwarner.Alien-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -262,6 +435,15 @@
 			buildConfigurations = (
 				D97F6CC81F83042D00C5C6AA /* Debug */,
 				D97F6CC91F83042D00C5C6AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9F551021F8BF92D00201D7D /* Build configuration list for PBXNativeTarget "Alien-Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9F551031F8BF92D00201D7D /* Debug */,
+				D9F551041F8BF92D00201D7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

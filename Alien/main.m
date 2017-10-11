@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Alien.h"
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
-    }
+        NSArray *arguments = [[NSProcessInfo processInfo] arguments];
+        Alien *alien = [[Alien alloc] init];
+        for (int i = 1; i < [arguments count]; i++) {
+            [alien createInterface: arguments[i]];
+        }    }
     return 0;
 }
