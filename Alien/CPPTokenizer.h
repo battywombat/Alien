@@ -20,8 +20,8 @@
     int linenum;
     int colnum;
 
-    BOOL in_line_comment;
-    BOOL in_multiline_comment;
+    BOOL inLineComment;
+    BOOL inMultilineComment;
     BOOL op_was_last;
 }
 

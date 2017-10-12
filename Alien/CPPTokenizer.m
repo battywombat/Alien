@@ -16,8 +16,8 @@
 {
     prev = -1;
     data = s;
-    in_line_comment = false;
-    in_multiline_comment = false;
+    inLineComment = false;
+    inMultilineComment = false;
     op_was_last = false;
     return self;
 }
@@ -32,7 +32,7 @@
     NSString *tok;
     int symlen;
     NSMutableCharacterSet *operators = [[NSMutableCharacterSet alloc] init];
-    [operators addCharactersInString: @"()[];~%^{}"];
+    [operators addCharactersInString: @"()[];~%^{}."];
     NSMutableCharacterSet *symbols = [[NSMutableCharacterSet alloc] init];
     [symbols addCharactersInString: @"_"];
     [symbols formUnionWithCharacterSet: [NSCharacterSet alphanumericCharacterSet]];
@@ -44,19 +44,24 @@
     }
     if ([data characterAtIndex: i] == L'/') {
         symlen = [self getSymLength: @"/*"];
-        if (symlen == 2) {
-            op_was_last = false;
+        if ([data characterAtIndex: i+1] == L'*') {
+            inMultilineComment = true;
+        }
+        else if ([data characterAtIndex: i+1] == L'/') {
+            inLineComment = true;
         }
     }
     else if ([data characterAtIndex: i] == L'*') {
         symlen = [self getSymLength: @"/"];
-        if (symlen == 2) {
-            op_was_last = false;
+        if (symlen > 0) {
+            inMultilineComment = false;
         }
     }
     else if ([data characterAtIndex: i] == L'\n') {
         symlen = 1;
         linenum += 1;
+        colnum = 0;
+        inMultilineComment = false;
     }
     else if ([data characterAtIndex: i] == L'=') {
         symlen = [self getSymLength: @"="];
@@ -109,6 +114,7 @@
     tok = [data substringWithRange: NSMakeRange(i, symlen)];
     prev = i;
     i += symlen;
+    colnum += i;
     return tok;
 }
 
@@ -123,7 +129,7 @@
 
 -(int)getSymLength: (NSString *)next
 {
-    if (op_was_last) {
+    if (op_was_last && !inLineComment && !inMultilineComment) {
         [self throwException: i+1];
     }
     NSMutableCharacterSet *set = [[NSMutableCharacterSet alloc] init];

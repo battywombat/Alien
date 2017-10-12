@@ -16,6 +16,7 @@
 		D97F6CC41F83042D00C5C6AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CC31F83042D00C5C6AA /* main.m */; };
 		D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
 		D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
+		D99ED2CA1F8F0F3F00A1B984 /* ParserDefn.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */; };
 		D9F550F41F87F16800201D7D /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F31F87F16800201D7D /* Parser.m */; };
 		D9F550F81F897A5000201D7D /* TypeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F71F897A5000201D7D /* TypeManager.m */; };
 		D9F551001F8BF92D00201D7D /* TokenizerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */; };
@@ -66,6 +67,7 @@
 		D97F6CCE1F83075E00C5C6AA /* Alien.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Alien.m; sourceTree = "<group>"; };
 		D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPPTokenizer.m; sourceTree = "<group>"; };
 		D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPPTokenizer.h; sourceTree = "<group>"; };
+		D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ParserDefn.plist; sourceTree = "<group>"; };
 		D9F550F31F87F16800201D7D /* Parser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Parser.m; sourceTree = "<group>"; };
 		D9F550F51F87F17200201D7D /* Parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
 		D9F550F61F897A2400201D7D /* TypeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeManager.h; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				D96312251F8D9853004E1E0D /* RadixTree.m */,
 				D96312271F8D9868004E1E0D /* RadixNode.h */,
 				D96312281F8D9868004E1E0D /* RadixNode.m */,
+				D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */,
 			);
 			path = Alien;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D99ED2CA1F8F0F3F00A1B984 /* ParserDefn.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
