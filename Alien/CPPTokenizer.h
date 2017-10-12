@@ -41,4 +41,6 @@
 
 -(void)rewind;
 
+-(void)skipUntil: (NSString *)end;
+
 @end

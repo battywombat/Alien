@@ -12,14 +12,10 @@
 #import "ClassDefinition.h"
 
 @interface Parser : NSObject
-{
-    BOOL in_line_comment;
-    BOOL in_multiline_comment;
-    BOOL in_preprocessor_command;
-    CPPTokenizer *tokens;
-}
 
-@property (getter=defns)NSMutableArray<ClassDefinition *> *defns;
+@property (readonly) CPPTokenizer *tokens;
+@property (readonly) NSMutableArray<ClassDefinition *> *defns;
+@property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;
 
 -(id)init;
 

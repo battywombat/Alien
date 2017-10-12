@@ -108,7 +108,7 @@
         op_was_last = false;
         symlen = [self getSymLengthInSet: [NSCharacterSet decimalDigitCharacterSet] exculding: [NSCharacterSet letterCharacterSet]];
     }    else {
-        [self throwException: i];
+//        [self throwException: i];
         symlen = 1;
     }
     tok = [data substringWithRange: NSMakeRange(i, symlen)];
@@ -164,6 +164,13 @@
     if (prev != -1) {
         i = prev;
     }
+}
+
+-(void)skipUntil: (NSString *)end
+{
+    NSString *s;
+    while (![ s = [self nextToken] isEqualTo: end] && s != nil)
+        ;
 }
 
 @end

@@ -15,54 +15,71 @@
 -(id)init
 {
     self = [super init];
-    in_line_comment = false;
-    in_multiline_comment = false;
-    in_preprocessor_command = false;
-    tokens = nil;
+    _tokens = nil;
     _defns = [[NSMutableArray alloc] init];
-    
+    _defines = [[NSMutableDictionary alloc] init];
     return self;
+}
+
+- (void)handlePreprocessorCommand {
+    NSString *token = [_tokens nextToken];
+    if ([token isEqualTo: @"include"]) {
+        NSString *includeFile = [[_tokens nextToken] stringByReplacingOccurrencesOfString: @"\"" withString: @""];
+        if (![includeFile isEqualTo: @"<"]) {
+            [self parseFile: includeFile];
+        }
+    }
+    else if ([token isEqualTo: @"define"]) {
+        NSString *defname = [_tokens nextToken], *value = [_tokens nextToken];
+        if (!defname || [defname isEqualTo: @"\n"]) {
+            [_tokens rewind];
+        }
+        else {
+            _defines[defname] = !value || [value isEqualTo: @"\n"] ? @"" : value;
+        }
+    }
+    else if ([token isEqualTo: @"ifdef"]) {
+        token = [_tokens nextToken];
+        if (token && _defines[token] == nil) {
+            while (true) {
+                [_tokens skipUntil: @"#"];
+                if ([token = [_tokens nextToken] isEqualTo: @"endif"] || !token) {
+                    break;
+                }
+            }
+        }
+    }
+    else if ([token isEqualTo: @"ifndef"]) {
+        token = [_tokens nextToken];
+        if (token && _defines[token] != nil) {
+            while (true) {
+                [_tokens skipUntil: @"#"];
+                if ([token = [_tokens nextToken] isEqualTo: @"endif"] || !token) {
+                    break;
+                }
+            }
+        }
+    }
+    [_tokens skipUntil: @"\n"];
 }
 
 -(void) parseString: (NSString *) str
 {
-    tokens = [[CPPTokenizer alloc] initFromString: str];
+    _tokens = [[CPPTokenizer alloc] initFromString: str];
     [[TypeManager singleton] startNewFile];
     NSString *currentToken;
-    while ((currentToken = [tokens nextToken]) != nil) {
-        if (in_line_comment) {
-            if ([currentToken isEqualTo: @"\n"]) {
-                in_line_comment = false;
-            }
-        }
-        if (in_multiline_comment) {
-            if ([currentToken isEqualTo: @"*/"]) {
-                in_multiline_comment = false;
-            }
-        }
-        if (in_preprocessor_command) {
-            if ([currentToken isEqualTo: @"include"]) {
-                NSString *includeFile = [[tokens nextToken] stringByReplacingOccurrencesOfString: @"\"" withString: @""];
-                if ([includeFile isEqualTo: @"<"]) {
-                    continue;
-                }
-                [self parseFile: includeFile];
-            }
-            if ([currentToken isEqualTo: @"\n"]) {
-                in_preprocessor_command = false;
-            }
-        }
+    while ((currentToken = [_tokens nextToken]) != nil) {
         if ([currentToken isEqualTo: @"class"]) {
-            [self addClassDefn: [ClassDefinition parseClass: tokens]];
+            [self addClassDefn: [ClassDefinition parseClass: _tokens]];
         }
         else if ([currentToken isEqualTo: @"//"]) {
-            in_line_comment = true;
+            [_tokens skipUntil: @"\n"];
         }
         else if ([currentToken isEqualTo: @"/*"]) {
-            in_multiline_comment = true;
+            [_tokens skipUntil: @"*/"];
         }
         else if ([currentToken isEqualTo: @"#"]) {
-            in_preprocessor_command = true;
+            [self handlePreprocessorCommand];
         }
     }
 }

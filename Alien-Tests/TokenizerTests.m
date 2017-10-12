@@ -74,6 +74,30 @@
     XCTAssertThrows([tokenizer nextToken], @"Invalid string should throw exception");
 }
 
+-(void)testSkipUntil {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"// b \n c"];
+    id tokens = @[ @"c" ];
+    [tokenizer skipUntil: @"\n"];
+    [self testTokens: tokenizer shouldEqual: tokens];
+}
+
+-(void)testSkipUntilStops {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"// a b c d"];
+    XCTAssertNoThrow([tokenizer skipUntil: @"\n"], @"skipUntil not stopping when token missing");
+}
+
+-(void)testSkipUntilSkipsFirst {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"// b \n c"];
+    id tokens = @[ @"b", @"\n", @"c" ];
+    [tokenizer skipUntil: @"//"];
+    [self testTokens: tokenizer shouldEqual: tokens];
+}
+
+-(void)testSkipUntilEmpty {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @""];
+    XCTAssert([tokenizer nextToken] == nil, @"Should not create another token somehow.");
+}
+
 -(void) testTokens: (CPPTokenizer *)tokenizer shouldEqual: (NSArray<NSString *> *)tokens {
     NSString *actualToken;
     for (id token in tokens) {
