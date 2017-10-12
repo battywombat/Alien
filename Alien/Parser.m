@@ -21,16 +21,27 @@
     return self;
 }
 
-- (void)handlePreprocessorCommand {
+- (void)handlePreprocessorCommand
+{
     NSString *token = [_tokens nextToken];
     if ([token isEqualTo: @"include"]) {
         NSString *includeFile = [[_tokens nextToken] stringByReplacingOccurrencesOfString: @"\"" withString: @""];
         if (![includeFile isEqualTo: @"<"]) {
+            if (![NSFileManager.defaultManager fileExistsAtPath: includeFile]) {
+                @throw [NSException exceptionWithName: @"ParseError"
+                                               reason: [NSString stringWithFormat: @"include file %@ not found", includeFile]
+                                             userInfo: nil];
+            }
             [self parseFile: includeFile];
         }
     }
     else if ([token isEqualTo: @"define"]) {
         NSString *defname = [_tokens nextToken], *value = [_tokens nextToken];
+        if (_defines[defname] != nil) {
+            @throw [NSException exceptionWithName: @"ParseError"
+                                           reason: [NSString stringWithFormat: @"%@ defined twice", defname]
+                                         userInfo: nil];
+        }
         if (!defname || [defname isEqualTo: @"\n"]) {
             [_tokens rewind];
         }
@@ -70,7 +81,7 @@
     NSString *currentToken;
     while ((currentToken = [_tokens nextToken]) != nil) {
         if ([currentToken isEqualTo: @"class"]) {
-            [self addClassDefn: [ClassDefinition parseClass: _tokens]];
+            [self addClassDefn: [[ClassDefinition alloc] initWithTokens: _tokens]];
         }
         else if ([currentToken isEqualTo: @"//"]) {
             [_tokens skipUntil: @"\n"];
@@ -95,7 +106,7 @@
     for (int i = 0; i < [_defns count]; i++) {
         current = [_defns objectAtIndex: i];
         if ([[current className] isEqualTo: [cls className]]) {
-            if ([current isStub]) {
+            if ([current stub]) {
                 [_defns replaceObjectAtIndex: i withObject: cls];
                 return;
             }

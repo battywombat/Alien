@@ -12,14 +12,49 @@
 
 @interface ParserTests : XCTestCase
 
+@property Parser *parser;
+
 @end
 
 @implementation ParserTests
 
-- (void)testDoesntParseLineComment {
-    Parser *p = [[Parser alloc] init];
-    [p parseString: @"// class Test {}; \n"];
-    XCTAssert([[p defns] count] == 0, @"Should not have parsed class");
+- (void) setUp {
+    [super setUp];
+    _parser = [[Parser alloc] init];
 }
+
+- (void)testDoesntParseLineComment {
+    [_parser parseString: @"// class Test {}; \n"];
+    XCTAssert([[_parser defns] count] == 0, @"Should not have parsed class");
+}
+
+- (void)testDefine {
+    [_parser parseString: @"#define TEST 5"];
+    XCTAssert([[_parser defines][@"TEST"] isEqualTo: @"5"], @"Define Not Parsed");
+}
+
+- (void)testEmptyDefine {
+    [_parser parseString: @"#define TEST"];
+    XCTAssert([[_parser defines][@"TEST"] isEqualTo: @""]);
+}
+
+- (void)testIfdefSkips {
+    [_parser parseString: @"#ifdef TEST\n #define TEST #endif"];
+    XCTAssert([_parser defines][@"TEST"] == nil);
+}
+
+- (void)testIfdefNotSkips {
+    [_parser parseString: @"#define TEST 5\n#ifdef TEST\n #define TEST2 \n#endif"];
+    XCTAssert([[_parser defines][@"TEST"] isEqualTo: @"5"] && [_parser.defines[@"TEST2"] isEqualTo: @""]);
+}
+
+- (void)testDefineTwice {
+    XCTAssertThrows([_parser parseString: @"#define TEST 5\n#define TEST 3"]);
+}
+
+- (void)testInvalidInclude {
+    XCTAssertThrows([_parser parseString: @"#include \"fake\"\n"]);
+}
+
 
 @end

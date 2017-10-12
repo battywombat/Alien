@@ -13,16 +13,14 @@
 #import "MethodDefinition.h"
 
 @interface ClassDefinition : NSObject
-{
-    NSString *className;
-}
 
-@property (getter=methods) NSMutableArray<MethodDefinition *> *methods;
-@property (getter=isStub, setter=setStub:) BOOL stub;
+@property (readonly) NSString *className;
+@property (readonly) NSMutableArray<MethodDefinition *> *methods;
+@property BOOL stub;
 
 -(id)init;
 
-+(id)parseClass: (CPPTokenizer *) tokens;
+-(id)initWithTokens: (CPPTokenizer *) tokens;
 
 
 @end

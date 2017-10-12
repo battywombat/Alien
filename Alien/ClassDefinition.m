@@ -20,27 +20,34 @@
 }
 
 
-+(id)parseClass: (CPPTokenizer *) tokens
+- (void)throwException : (NSString *) message {
+    @throw [NSException exceptionWithName: @"ParseError"
+                                   reason: message
+                                 userInfo: nil];
+}
+
+-(id)initWithTokens: (CPPTokenizer *) tokens
 {
-    ClassDefinition *defn = [[ClassDefinition alloc] init];
+    self = [super init];
     NSString *currentToken;
-    defn->className = [tokens nextToken];
+    _methods = [[NSMutableArray alloc] init];
+    _className = [tokens nextToken];
     NSString *superClassName;
     currentToken = [tokens nextToken];
     if ([currentToken isEqualTo: @":"]) {
         superClassName = [tokens nextToken];
     }
     else if ([currentToken isEqualTo: @";"]) {
-        [defn setStub: true];
-        return defn;
+        _stub = true;
+        return self;
     }
     else {
         superClassName = @"NSObject";
     }
-    [defn setStub: false];
+    _stub = false;
     currentToken = [tokens nextToken];
     if (![currentToken isEqualTo: @"{"]) {
-        return defn;
+        [self throwException: @"Incomplete class definition"];
     }
     BOOL in_class = true;
     BOOL public = false;
@@ -52,7 +59,7 @@
                 public = true;
             }
             else {
-                return defn;
+                [self throwException: @"expected ':'"];
             }
         }
         else if ([currentToken isEqualTo: @"private"] || [currentToken isEqualTo: @"protected"]) {
@@ -60,24 +67,24 @@
                 public = false;
             }
             else {
-                return defn;
+                [self throwException: @"Expected ':'"];
             }
         }
         
-        else if ([currentToken isEqualTo: [defn className]]) {
+        else if ([currentToken isEqualTo: _className]) {
             
         }
-        else if ([currentToken isEqualTo: [@"~" stringByAppendingString: [defn className]]]) {
+        else if ([currentToken isEqualTo: [@"~" stringByAppendingString: _className]]) {
             
         }
         else if (![currentToken isEqualTo: @"\n"]) {
             [tokens rewind];
             MethodDefinition *newMethod = [MethodDefinition parseMethod: tokens];
-            [[defn methods] addObject: newMethod];
+            [_methods addObject: newMethod];
         }
     }
     
-    return defn;
+    return self;
 }
 
 @end
