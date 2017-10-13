@@ -8,21 +8,19 @@
 
 @interface CPPTokenizer : NSObject
 {
-    @private
-    NSString *data;
+    @private NSString *_data;
     
-    @private
-    NSUInteger idx;
+    @private NSUInteger _index;
     
-    @private
-    NSUInteger prev;
-    
-    int linenum;
-    int colnum;
+    @private NSUInteger _prev;
 
-    BOOL inLineComment;
-    BOOL inMultilineComment;
-    BOOL opWasLast;
+    @private int _lineNum;
+
+    @private int _colNum;
+
+    @private BOOL _inLineComment;
+    @private BOOL _inMultilineComment;
+    @private BOOL _opWasLast;
 }
 
 -(id)initFromString: (NSString *) s;
