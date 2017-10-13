@@ -78,10 +78,12 @@
 {
     _tokens = [[CPPTokenizer alloc] initFromString: str];
     [[TypeManager singleton] startNewFile];
+    [_tokens filter: @"/*" to: @"*/"];
+    [_tokens filter: @"//" to: @"\n"];
     NSString *currentToken;
     while ((currentToken = [_tokens nextToken]) != nil) {
         if ([currentToken isEqualTo: @"class"]) {
-            [self addClassDefn: [[ClassDefinition alloc] initWithTokens: _tokens]];
+            [self handleClassSymbol];
         }
         else if ([currentToken isEqualTo: @"//"]) {
             [_tokens skipUntil: @"\n"];
@@ -100,19 +102,89 @@
     [self parseString: [NSString stringWithContentsOfFile: file usedEncoding: nil error: nil]];
 }
 
--(void) addClassDefn: (ClassDefinition *) cls
+-(void) addClassDefn
 {
+    ClassDefinition *n;
+    if (_stub) {
+        n = [[ClassDefinition alloc] init: _className];
+    }
+    else {
+        n = [[ClassDefinition alloc] init: _className withMethods: _methods];
+    }
     ClassDefinition *current;
     for (int i = 0; i < [_defns count]; i++) {
         current = [_defns objectAtIndex: i];
-        if ([[current className] isEqualTo: [cls className]]) {
+        if ([[current className] isEqualTo: n.className]) {
             if ([current stub]) {
-                [_defns replaceObjectAtIndex: i withObject: cls];
+                [_defns replaceObjectAtIndex: i withObject: n];
                 return;
             }
         }
     }
 }
 
+- (void)handleClassSymbol {
+    NSString *currentToken;
+    _methods = [[NSMutableArray alloc] init];
+    _className = [_tokens nextToken];
+    NSString *superClassName;
+    currentToken = [_tokens nextToken];
+    if ([currentToken isEqualTo: @":"]) {
+        superClassName = [_tokens nextToken];
+    }
+    else if ([currentToken isEqualTo: @";"]) {
+        _stub = true;
+        [self addClassDefn];
+        return;
+    }
+    else {
+        superClassName = @"NSObject";
+    }
+    _stub = false;
+    currentToken = [_tokens nextToken];
+    if (![currentToken isEqualTo: @"{"]) {
+        [self throwException: @"Incomplete class definition"];
+    }
+    BOOL in_class = true;
+    BOOL public = false;
+    while (in_class) {
+        currentToken = [_tokens nextToken];
+        if ([currentToken isEqualTo: @"public"]) {
+            currentToken = [_tokens nextToken];
+            if ([currentToken isEqualTo: @":"]) {
+                public = true;
+            }
+            else {
+                [self throwException: @"expected ':'"];
+            }
+        }
+        else if ([currentToken isEqualTo: @"private"] || [currentToken isEqualTo: @"protected"]) {
+            if ([currentToken isEqualTo: @":"]) {
+                public = false;
+            }
+            else {
+                [self throwException: @"Expected ':'"];
+            }
+        }
+
+        else if ([currentToken isEqualTo: _className]) {
+
+        }
+        else if ([currentToken isEqualTo: [@"~" stringByAppendingString: _className]]) {
+
+        }
+        else if (![currentToken isEqualTo: @"\n"]) {
+            [_tokens rewind];
+            MethodDefinition *newMethod = [MethodDefinition parseMethod: _tokens];
+            [_methods addObject: newMethod];
+        }
+    }
+}
+
+- (void)throwException : (NSString *) message {
+    @throw [NSException exceptionWithName: @"ParseError"
+                                   reason: message
+                                 userInfo: nil];
+}
 
 @end

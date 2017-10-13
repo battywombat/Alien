@@ -15,10 +15,11 @@
 @interface ClassDefinition : NSObject
 
 @property (readonly) NSString *className;
-@property (readonly) NSMutableArray<MethodDefinition *> *methods;
+@property (readonly) NSArray<MethodDefinition *> *methods;
 @property BOOL stub;
 
--(id)init;
+-(id)init: (NSString *) name withMethods: (NSArray *) methods;
+-(id)init: (NSString *) name;
 
 -(id)initWithTokens: (CPPTokenizer *) tokens;
 

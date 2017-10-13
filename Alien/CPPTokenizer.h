@@ -12,17 +12,17 @@
     NSString *data;
     
     @private
-    int i;
+    NSUInteger idx;
     
     @private
-    int prev;
+    NSUInteger prev;
     
     int linenum;
     int colnum;
 
     BOOL inLineComment;
     BOOL inMultilineComment;
-    BOOL op_was_last;
+    BOOL opWasLast;
 }
 
 -(id)initFromString: (NSString *) s;
@@ -31,7 +31,7 @@
 
 -(NSString *)nextToken;
 
--(void)throwException: (int) idx;
+-(void)throwException: (NSUInteger) idx;
 
 -(int)getSymLength: (NSString *)next;
 
@@ -41,6 +41,10 @@
 
 -(void)rewind;
 
+-(void)reset;
+
 -(void)skipUntil: (NSString *)end;
+
+-(void)filter: (NSString *)from to: (NSString *) end;
 
 @end

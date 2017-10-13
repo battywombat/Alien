@@ -13,16 +13,20 @@
 
 @interface Parser : NSObject
 
+@property (readonly) BOOL inClass;
+@property (readonly) BOOL stub;
 @property (readonly) CPPTokenizer *tokens;
 @property (readonly) NSMutableArray<ClassDefinition *> *defns;
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;
+@property (readonly) NSMutableArray <MethodDefinition *> *methods;
+@property (readonly) NSString *className;
 
--(id)init;
+- (id) init;
 
--(void) parseFile: (NSString *) file;
+- (void) parseFile: (NSString *) file;
 
 - (void) parseString: (NSString *) str;
 
-- (void) addClassDefn: (ClassDefinition *) cls;
+- (void) handleClassSymbol;
 
 @end

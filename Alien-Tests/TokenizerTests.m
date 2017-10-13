@@ -98,6 +98,19 @@
     XCTAssert([tokenizer nextToken] == nil, @"Should not create another token somehow.");
 }
 
+-(void) testFilter {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"a b /* c */ d"];
+    [tokenizer filter: @"/*" to: @"*/"];
+    [self testTokens: tokenizer shouldEqual: @[@"a", @"b", @"d"]];
+}
+
+-(void) testFilterDuringIteration {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"a b /* c */ d"];
+    [tokenizer nextToken];
+    [tokenizer filter: @"/*" to: @"*/"];
+    [self testTokens: tokenizer shouldEqual: @[@"b", @"d"]];
+}
+
 -(void) testTokens: (CPPTokenizer *)tokenizer shouldEqual: (NSArray<NSString *> *)tokens {
     NSString *actualToken;
     for (id token in tokens) {
