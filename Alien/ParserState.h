@@ -15,7 +15,6 @@
 @property BOOL inClass;
 @property BOOL stub;
 @property enum AccessLevel currentAccessLevel;
-@property NSMutableArray<ClassDefinition *> *defns;
 @property NSMutableArray <MethodDefinition *> *methods;
 @property NSString *className;
 

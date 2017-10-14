@@ -14,7 +14,6 @@
     self = [super init];
     _inClass = false;
     _stub = false;
-    _defns = [[NSMutableArray alloc] init];
     _methods = [[NSMutableArray alloc] init];
     _className = nil;
     _currentAccessLevel = PRIVATE;

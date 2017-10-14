@@ -21,13 +21,12 @@
 }
 
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;
+@property (readonly) NSMutableDictionary<NSString *, ClassDefinition *> *defns;
 
 - (id) init;
 
 - (void) parseFile: (NSString *) file;
 
 - (void) parseString: (NSString *) str;
-
-- (NSArray<ClassDefinition *> *) defns;
 
 @end

@@ -17,21 +17,20 @@
     self = [super init];
     _tokens = nil;
     _defines = [[NSMutableDictionary alloc] init];
+    _defns = [[NSMutableDictionary alloc] init];
+    _states = [[Stack alloc] init];
     self.parserState.currentAccessLevel = PUBLIC;
     self.parserState.inClass = false;
     self.parserState.stub = false;
     return self;
 }
 
--(id)initWithState: (NSMutableArray<ClassDefinition *> *) defns defines: (NSMutableDictionary<NSString *, NSString *> *) defines
+-(id)initWithState: (NSMutableDictionary<NSString *, ClassDefinition *> *) defns defines: (NSMutableDictionary<NSString *, NSString *> *) defines
 {
     self = [super init];
     _tokens = nil;
-    self.parserState.defns = defns;
-    _defines = defines;
-    self.parserState.currentAccessLevel = PUBLIC;
-    self.parserState.inClass = false;
-    self.parserState.stub = false;
+    _defines = [[NSMutableDictionary alloc] init];
+    _states = [[Stack alloc] init];
     return self;
 }
 
@@ -46,7 +45,7 @@
                                                reason: [NSString stringWithFormat: @"include file %@ not found", includeFile]
                                              userInfo: nil];
             }
-            Parser *p = [[Parser alloc] initWithState: self.parserState.defns defines: _defines];
+            Parser *p = [[Parser alloc] initWithState: _defns defines: _defines];
             [p parseFile: includeFile];
         }
     }
@@ -168,7 +167,6 @@
             [self throwException: @"Expected ':'"];
         }
     }
-
     else if ([currentToken isEqualTo: self.parserState.className]) { // Constructor
         NSArray<NSArray<NSString *> *> *args = [self parseArgs];
         [self.parserState.methods addObject: [[MethodDefinition alloc] init: self.parserState.className
@@ -188,7 +186,7 @@
     }
     else {
         [_tokens rewind];
-        [self parseMethod: _tokens];
+        [self parseMember: _tokens];
     }
 }
 
@@ -221,7 +219,7 @@
     return args;
 }
 
-- (void) parseMethod: (CPPTokenizer *)tokens
+- (void) parseMember: (CPPTokenizer *)tokens
 {
     NSString *returnType = [[TypeManager singleton] parseType: tokens];
     NSString *name = [_tokens nextToken];
@@ -267,15 +265,8 @@
     else {
         n = [[ClassDefinition alloc] init: self.parserState.className withMethods: self.parserState.methods];
     }
-    ClassDefinition *current;
-    for (int i = 0; i < [self.parserState.defns count]; i++) {
-        current = [self.parserState.defns objectAtIndex: i];
-        if ([[current className] isEqualTo: n.className]) {
-            if ([current stub]) {
-                [self.parserState.defns replaceObjectAtIndex: i withObject: n];
-                return;
-            }
-        }
+    if (_defns[n.className] == nil || _defns[n.className].stub) {
+        _defns[n.className] = n;
     }
 }
 
@@ -290,10 +281,6 @@
         [_states push: [[ParserState alloc] init]];
     }
     return [_states peek];
-}
-
-- (NSArray<ClassDefinition *> *)defns { 
-    return self.parserState.defns;
 }
 
 @end

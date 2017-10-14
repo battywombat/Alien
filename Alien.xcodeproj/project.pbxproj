@@ -11,6 +11,7 @@
 		D92329A51F8C7D3600005A26 /* TypeManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D92329A41F8C7D3600005A26 /* TypeManagerTests.m */; };
 		D9348ED31F8739730095FB29 /* ClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED21F8739730095FB29 /* ClassDefinition.m */; };
 		D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED61F873B360095FB29 /* MethodDefinition.m */; };
+		D93DE31B1F91CDCE00C92A4B /* Stack.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E891F91B7760071DAB3 /* Stack.m */; };
 		D9463E8A1F91B7760071DAB3 /* Stack.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E891F91B7760071DAB3 /* Stack.m */; };
 		D9463E8D1F91B9AB0071DAB3 /* ParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E8C1F91B9AB0071DAB3 /* ParserState.m */; };
 		D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E8C1F91B9AB0071DAB3 /* ParserState.m */; };
@@ -269,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93DE31B1F91CDCE00C92A4B /* Stack.m in Sources */,
 				D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */,
 				D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */,
 				D9F5510E1F8C002400201D7D /* TypeManager.m in Sources */,

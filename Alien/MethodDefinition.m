@@ -28,7 +28,6 @@
     _type = INSTANCE;
     _arguments = arguments;
     _returnType = returnType;
-    _returnType = @"void";
     return self;
 }
 
