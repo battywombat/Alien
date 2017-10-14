@@ -22,16 +22,16 @@
 -(int) createInterface: (NSString *) file
 {
     NSFileManager *fm = [NSFileManager defaultManager];
-    BOOL is_dir;
-    if(![fm fileExistsAtPath: file isDirectory: &is_dir]) {
+    BOOL isDir;
+    if(![fm fileExistsAtPath: file isDirectory: &isDir]) {
         return 1;
     }
-    if (is_dir) {
+    if (isDir) {
         NSError *err;
         NSArray<NSString *> *files = [fm contentsOfDirectoryAtPath:file error: &err];
         for(id path in files) {
-            [fm fileExistsAtPath: path isDirectory:&is_dir];
-            if (!is_dir && [self createFileInterface: path]) {
+            [fm fileExistsAtPath: path isDirectory:&isDir];
+            if (!isDir && [self createFileInterface: path]) {
                 return 1;
             }
         }

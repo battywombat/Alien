@@ -21,7 +21,5 @@
 -(id)init: (NSString *) name withMethods: (NSArray *) methods;
 -(id)init: (NSString *) name;
 
--(id)initWithTokens: (CPPTokenizer *) tokens;
-
 
 @end

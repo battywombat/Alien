@@ -69,6 +69,7 @@
     }
     while ([current = [tokens nextToken] isEqualTo: @"*"] || [current isEqualTo: @"&"]) {
         ty = [NSString stringWithFormat: @"%@ %@", ty, current];
+        current = [tokens nextToken];
     }
     [tokens rewind];
     return ty;

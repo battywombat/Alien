@@ -12,49 +12,42 @@
 
 @implementation MethodDefinition
 
-@synthesize arguments = _arguments;
 
-@synthesize methodName = _name;
-
--(id)init
-{
+- (id)init:(NSString *)name {
     self = [super init];
-    _arguments = [[NSMutableArray alloc] init];
-    _name = nil;
-    
+    _name = name;
+    _type = INSTANCE;
+    _arguments = [[NSArray alloc] init];
+    _returnType = @"void";
     return self;
 }
 
-+(id)parseMethod: (CPPTokenizer *) tokens
-{
-    MethodDefinition *d = [[MethodDefinition alloc] init];
-//    NSString *returnType = [[TypeManager singleton] parseType: tokens];
-//    NSString *name = [tokens nextToken];
-    NSString *currentToken = [tokens nextToken];
-    if (![currentToken isEqualTo: @"("]) {
-        
-    }
-    return d;
+-(id)init: (NSString *) name returnType: (NSString *) returnType withArguments: (NSArray<NSArray<NSString *> *> *) arguments {
+    self = [super init];
+    _name = name;
+    _type = INSTANCE;
+    _arguments = arguments;
+    _returnType = returnType;
+    _returnType = @"void";
+    return self;
 }
 
-+(id)parseConstructor: (CPPTokenizer *) tokens
-{
-    MethodDefinition *d = [[MethodDefinition alloc] init];
-    [d setStatic: true];
-    NSString *currentToken = [tokens nextToken];
-    if (![currentToken isEqualTo: @"("]) {
-        return d;
-    }
-    while (![currentToken isEqualTo: @")"]) {
-        
-    }
-    
-    if (![currentToken isEqualTo: @";"]) {
-        return d;
-    }
-    
-    
-    return d;
+- (id)init:(NSString *)name withArguments:(NSArray<NSArray<NSString *> *> *)arguments ofType:(enum MethodType)type { 
+    self = [super init];
+    _name = name;
+    _type = type;
+    _arguments = arguments;
+    _returnType = @"void";
+    return self;
+}
+
+- (id)init:(NSString *)name ofType:(enum MethodType)type {
+    self = [super init];
+    _name = name;
+    _type = type;
+    _arguments = [[NSArray alloc] init];
+    _returnType = @"void";
+    return self;
 }
 
 @end

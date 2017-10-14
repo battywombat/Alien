@@ -13,21 +13,23 @@
 #import "CPPTokenizer.h"
 #import "TypeManager.h"
 
+enum MethodType {
+    INIT = 0,
+    STATIC,
+    INSTANCE,
+    DESTRUCTOR
+};
+
 @interface MethodDefinition : NSObject
-{
-    BOOL isInit;
-}
 
-@property (setter=setStatic:, getter=isStatic) BOOL _static;
+@property (readonly) enum MethodType type;
+@property (readonly) NSArray<NSArray<NSString *> *> *arguments;
+@property (readonly) NSString *name;
+@property (readonly) NSString *returnType;
 
-@property (getter=arguments) NSMutableArray<NSString *> *arguments;
-
-@property (getter=name) NSString *methodName;
-
-+(id)parseMethod: (CPPTokenizer *) s;
-
-+(id)parseConstructor: (CPPTokenizer *) tokens;
-
--(id)init;
+-(id)init: (NSString *) name withArguments: (NSArray<NSArray<NSString *> *> *) arguments ofType:(enum MethodType) type;
+-(id)init: (NSString *) name returnType: (NSString *) returnType withArguments: (NSArray<NSArray<NSString *> *> *) arguments;
+-(id)init: (NSString *) name;
+-(id)init: (NSString *) name ofType: (enum MethodType) type;
 
 @end

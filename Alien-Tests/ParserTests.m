@@ -23,6 +23,10 @@
     _parser = [[Parser alloc] init];
 }
 
+- (void)testParseEmptyString {
+    XCTAssertNoThrow([_parser parseString: @""]);
+}
+
 - (void)testDoesntParseLineComment {
     [_parser parseString: @"// class Test {}; \n"];
     XCTAssert([[_parser defns] count] == 0, @"Should not have parsed class");
@@ -54,6 +58,20 @@
 
 - (void)testInvalidInclude {
     XCTAssertThrows([_parser parseString: @"#include \"fake\"\n"]);
+}
+
+-(void)testDefineLastLine {
+    XCTAssertNoThrow([_parser parseString: @"#define A 5"]);
+}
+
+- (void)testNestedDefine {
+    [_parser parseString:
+     @"#ifdef A\n"
+     @"#ifndef B\n"
+     @"#endif"
+     @"#define C\n"
+     @"#endif"];
+    XCTAssert([_parser defines][@"C"] == nil);
 }
 
 

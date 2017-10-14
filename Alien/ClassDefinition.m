@@ -12,14 +12,6 @@
 
 @implementation ClassDefinition
 
--(id)initWithTokens: (CPPTokenizer *) tokens
-{
-    self = [super init];
-
-    
-    return self;
-}
-
 - (id)init:(NSString *)name withMethods:(NSArray *)methods {
     self = [super init];
     _className = name;

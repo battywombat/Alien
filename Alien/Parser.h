@@ -11,10 +11,18 @@
 #import "CPPTokenizer.h"
 #import "ClassDefinition.h"
 
+enum AccessLevel {
+    NONE = 0,
+    PUBLIC,
+    PRIVATE,
+    PROTECTED
+};
+
 @interface Parser : NSObject
 
 @property (readonly) BOOL inClass;
 @property (readonly) BOOL stub;
+@property (readonly) enum AccessLevel currentAccessLevel;
 @property (readonly) CPPTokenizer *tokens;
 @property (readonly) NSMutableArray<ClassDefinition *> *defns;
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;
@@ -27,6 +35,6 @@
 
 - (void) parseString: (NSString *) str;
 
-- (void) handleClassSymbol;
+- (void) handleClassDefn;
 
 @end

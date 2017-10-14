@@ -22,7 +22,7 @@
 
 @property (getter=types) NSMutableArray<NSString *> *types;
 
-+(TypeManager *)singleton;
++ (TypeManager *)singleton;
 
 - (id)init;
 
