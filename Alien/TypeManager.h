@@ -12,15 +12,15 @@
 
 @interface TypeManager : NSObject
 
-@property (getter=basicNamespaces) NSMutableDictionary<NSString *, NSArray<NSString *> *> *basicNamespaces;
+@property (readonly) NSMutableDictionary<NSString *, NSArray<NSString *> *> *basicNamespaces;
 
-@property (getter=basicTypes) NSMutableArray<NSString *> *basicTypes;
+@property (readonly) NSMutableArray<NSString *> *basicTypes;
 
-@property (getter=namespaces) NSMutableDictionary<NSString *, NSArray<NSString *> *> *namespaces;
+@property (readonly) NSMutableDictionary<NSString *, NSArray<NSString *> *> *namespaces;
 
-@property (getter=qualifiers) NSArray<NSString *> *qualifiers;
+@property (readonly) NSArray<NSString *> *qualifiers;
 
-@property (getter=types) NSMutableArray<NSString *> *types;
+@property (readonly) NSMutableArray<NSString *> *types;
 
 + (TypeManager *)singleton;
 

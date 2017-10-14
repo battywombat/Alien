@@ -16,6 +16,8 @@
 
 @end
 
+static NSString *classdefn = @"Class A {\n%@\n};";
+
 @implementation ParserTests
 
 - (void) setUp {
@@ -72,6 +74,15 @@
      @"#define C\n"
      @"#endif"];
     XCTAssert([_parser defines][@"C"] == nil);
+}
+
+- (void)testParseMethod {
+//    MethodDefinition *m;
+//    [_parser parseString: [NSString stringWithFormat: classdefn, @"std::string dothing()"]];
+//    m = _parser.defns[0].methods[0];
+//    XCTAssert([m.returnType isEqualTo: @"std::string"]);
+//    XCTAssert(m.arguments.count == 0);
+//    XCTAssert([m.name isEqualTo: @"dothing"]);
 }
 
 

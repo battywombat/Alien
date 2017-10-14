@@ -11,6 +11,9 @@
 		D92329A51F8C7D3600005A26 /* TypeManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D92329A41F8C7D3600005A26 /* TypeManagerTests.m */; };
 		D9348ED31F8739730095FB29 /* ClassDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED21F8739730095FB29 /* ClassDefinition.m */; };
 		D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9348ED61F873B360095FB29 /* MethodDefinition.m */; };
+		D9463E8A1F91B7760071DAB3 /* Stack.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E891F91B7760071DAB3 /* Stack.m */; };
+		D9463E8D1F91B9AB0071DAB3 /* ParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E8C1F91B9AB0071DAB3 /* ParserState.m */; };
+		D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = D9463E8C1F91B9AB0071DAB3 /* ParserState.m */; };
 		D96312261F8D9853004E1E0D /* RadixTree.m in Sources */ = {isa = PBXBuildFile; fileRef = D96312251F8D9853004E1E0D /* RadixTree.m */; };
 		D96312291F8D9868004E1E0D /* RadixNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D96312281F8D9868004E1E0D /* RadixNode.m */; };
 		D97F6CC41F83042D00C5C6AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CC31F83042D00C5C6AA /* main.m */; };
@@ -57,6 +60,10 @@
 		D9348ED41F8739830095FB29 /* ClassDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassDefinition.h; sourceTree = "<group>"; };
 		D9348ED51F873B120095FB29 /* MethodDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodDefinition.h; sourceTree = "<group>"; };
 		D9348ED61F873B360095FB29 /* MethodDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodDefinition.m; sourceTree = "<group>"; };
+		D9463E881F91B7760071DAB3 /* Stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stack.h; sourceTree = "<group>"; };
+		D9463E891F91B7760071DAB3 /* Stack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stack.m; sourceTree = "<group>"; };
+		D9463E8B1F91B9AB0071DAB3 /* ParserState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParserState.h; sourceTree = "<group>"; };
+		D9463E8C1F91B9AB0071DAB3 /* ParserState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParserState.m; sourceTree = "<group>"; };
 		D96312241F8D9853004E1E0D /* RadixTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RadixTree.h; sourceTree = "<group>"; };
 		D96312251F8D9853004E1E0D /* RadixTree.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RadixTree.m; sourceTree = "<group>"; };
 		D96312271F8D9868004E1E0D /* RadixNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RadixNode.h; sourceTree = "<group>"; };
@@ -134,6 +141,10 @@
 				D96312271F8D9868004E1E0D /* RadixNode.h */,
 				D96312281F8D9868004E1E0D /* RadixNode.m */,
 				D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */,
+				D9463E881F91B7760071DAB3 /* Stack.h */,
+				D9463E891F91B7760071DAB3 /* Stack.m */,
+				D9463E8B1F91B9AB0071DAB3 /* ParserState.h */,
+				D9463E8C1F91B9AB0071DAB3 /* ParserState.m */,
 			);
 			path = Alien;
 			sourceTree = "<group>";
@@ -244,10 +255,12 @@
 				D97F6CC41F83042D00C5C6AA /* main.m in Sources */,
 				D96312291F8D9868004E1E0D /* RadixNode.m in Sources */,
 				D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */,
+				D9463E8D1F91B9AB0071DAB3 /* ParserState.m in Sources */,
 				D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */,
 				D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */,
 				D9F550F41F87F16800201D7D /* Parser.m in Sources */,
 				D96312261F8D9853004E1E0D /* RadixTree.m in Sources */,
+				D9463E8A1F91B7760071DAB3 /* Stack.m in Sources */,
 				D9348ED31F8739730095FB29 /* ClassDefinition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */,
 				D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */,
 				D9F5510E1F8C002400201D7D /* TypeManager.m in Sources */,
 				D9F5510D1F8C002100201D7D /* Parser.m in Sources */,

@@ -16,11 +16,10 @@
 {
     self = [super init];
     _tokens = nil;
-    _defns = [[NSMutableArray alloc] init];
     _defines = [[NSMutableDictionary alloc] init];
-    _currentAccessLevel = PUBLIC;
-    _inClass = false;
-    _stub = false;
+    self.parserState.currentAccessLevel = PUBLIC;
+    self.parserState.inClass = false;
+    self.parserState.stub = false;
     return self;
 }
 
@@ -28,11 +27,11 @@
 {
     self = [super init];
     _tokens = nil;
-    _defns = defns;
+    self.parserState.defns = defns;
     _defines = defines;
-    _currentAccessLevel = PUBLIC;
-    _inClass = false;
-    _stub = false;
+    self.parserState.currentAccessLevel = PUBLIC;
+    self.parserState.inClass = false;
+    self.parserState.stub = false;
     return self;
 }
 
@@ -47,7 +46,7 @@
                                                reason: [NSString stringWithFormat: @"include file %@ not found", includeFile]
                                              userInfo: nil];
             }
-            Parser *p = [[Parser alloc] initWithState: _defns defines: _defines];
+            Parser *p = [[Parser alloc] initWithState: self.parserState.defns defines: _defines];
             [p parseFile: includeFile];
         }
     }
@@ -124,7 +123,7 @@
     if ([currentToken isEqualTo: @"#"]) {
         [self handlePreprocessorCommand];
     }
-    else if (_inClass) {
+    else if (self.parserState.inClass) {
         [_tokens rewind];
         [self handleInClass];
     }
@@ -146,7 +145,7 @@
     if ([currentToken isEqualTo: @"public"]) {
         currentToken = [_tokens nextToken];
         if ([currentToken isEqualTo: @":"]) {
-            _currentAccessLevel = PUBLIC;
+            self.parserState.currentAccessLevel = PUBLIC;
         }
         else {
             [self throwException: @"expected ':'"];
@@ -155,7 +154,7 @@
     else if ([currentToken isEqualTo: @"private"]) {
         currentToken = [_tokens nextToken];
         if ([currentToken isEqualTo: @":"]) {
-            _currentAccessLevel = PRIVATE;
+            self.parserState.currentAccessLevel = PRIVATE;
         }
         else {
             [self throwException: @"Expected ':'"];
@@ -163,28 +162,28 @@
     }
     else if ([currentToken isEqualTo: @"protected"]) {
         if ([currentToken isEqualTo: @":"]) {
-            _currentAccessLevel = PROTECTED;
+            self.parserState.currentAccessLevel = PROTECTED;
         }
         else {
             [self throwException: @"Expected ':'"];
         }
     }
 
-    else if ([currentToken isEqualTo: _className]) { // Constructor
+    else if ([currentToken isEqualTo: self.parserState.className]) { // Constructor
         NSArray<NSArray<NSString *> *> *args = [self parseArgs];
-        [_methods addObject: [[MethodDefinition alloc] init: _className
+        [self.parserState.methods addObject: [[MethodDefinition alloc] init: self.parserState.className
                                               withArguments: args
                                                      ofType: INIT]];
         [_tokens skipUntil: @";"];
     }
-    else if ([currentToken isEqualTo: [@"~" stringByAppendingString: _className]]) { // Destructor
-        [_methods addObject: [[MethodDefinition alloc] init: [@"~" stringByAppendingString: _className]
+    else if ([currentToken isEqualTo: [@"~" stringByAppendingString: self.parserState.className]]) { // Destructor
+        [self.parserState.methods addObject: [[MethodDefinition alloc] init: [@"~" stringByAppendingString: self.parserState.className]
                                                      ofType: DESTRUCTOR]];
         [_tokens skipUntil: @";"];
     }
     else if ([currentToken isEqualTo: @"}"]) { // End of class
         [self addClassDefn];
-        _inClass = false;
+        [self parserState].inClass = false;
         [_tokens skipUntil: @";"];
     }
     else {
@@ -231,7 +230,7 @@
     }
     [_tokens rewind];
     NSArray<NSArray<NSString *> *> *args = [self parseArgs];
-    [_methods addObject: [[MethodDefinition alloc] init: name
+    [self.parserState.methods addObject: [[MethodDefinition alloc] init: name
                                              returnType: returnType
                                           withArguments: args]];
     [_tokens skipUntil: @";"];
@@ -239,41 +238,41 @@
 
 - (void)handleClassDefn {
     NSString *currentToken;
-    _methods = [[NSMutableArray alloc] init];
-    _className = [_tokens nextToken];
+    [_states push: [[ParserState alloc] init]];
+    self.parserState.className = [_tokens nextToken];
     NSString *superClassName;
     currentToken = [_tokens nextToken];
     if ([currentToken isEqualTo: @":"]) {
         superClassName = [_tokens nextToken];
     }
     else if ([currentToken isEqualTo: @";"]) {
-        _stub = true;
+        self.parserState.stub = true;
         [self addClassDefn];
         return;
     }
     else {
         superClassName = @"NSObject";
     }
-    _stub = false;
+    self.parserState.stub = false;
     currentToken = [_tokens nextToken];
-    _inClass = true;
+    [self parserState].inClass = true;
 }
 
 -(void) addClassDefn
 {
     ClassDefinition *n;
-    if (_stub) {
-        n = [[ClassDefinition alloc] init: _className];
+    if (self.parserState.stub) {
+        n = [[ClassDefinition alloc] init: self.parserState.className];
     }
     else {
-        n = [[ClassDefinition alloc] init: _className withMethods: _methods];
+        n = [[ClassDefinition alloc] init: self.parserState.className withMethods: self.parserState.methods];
     }
     ClassDefinition *current;
-    for (int i = 0; i < [_defns count]; i++) {
-        current = [_defns objectAtIndex: i];
+    for (int i = 0; i < [self.parserState.defns count]; i++) {
+        current = [self.parserState.defns objectAtIndex: i];
         if ([[current className] isEqualTo: n.className]) {
             if ([current stub]) {
-                [_defns replaceObjectAtIndex: i withObject: n];
+                [self.parserState.defns replaceObjectAtIndex: i withObject: n];
                 return;
             }
         }
@@ -284,6 +283,17 @@
     @throw [NSException exceptionWithName: @"ParseError"
                                    reason: message
                                  userInfo: nil];
+}
+
+- (ParserState *)parserState {
+    if (_states.count == 0) {
+        [_states push: [[ParserState alloc] init]];
+    }
+    return [_states peek];
+}
+
+- (NSArray<ClassDefinition *> *)defns { 
+    return self.parserState.defns;
 }
 
 @end

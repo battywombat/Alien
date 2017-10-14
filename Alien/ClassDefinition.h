@@ -12,6 +12,13 @@
 #import "TypeManager.h"
 #import "MethodDefinition.h"
 
+enum AccessLevel {
+    NONE = 0,
+    PUBLIC,
+    PRIVATE,
+    PROTECTED
+};
+
 @interface ClassDefinition : NSObject
 
 @property (readonly) NSString *className;
