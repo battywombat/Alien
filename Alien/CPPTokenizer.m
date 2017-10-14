@@ -36,11 +36,11 @@
     NSMutableCharacterSet *symbols = [[NSMutableCharacterSet alloc] init];
     [symbols addCharactersInString: @"_"];
     [symbols formUnionWithCharacterSet: [NSCharacterSet alphanumericCharacterSet]];
+    while (_index < _data.length && [[NSCharacterSet whitespaceCharacterSet] characterIsMember: [_data characterAtIndex: _index]]) {
+        _index++;
+    }
     if (_index == _data.length) {
         return nil;
-    }
-    while ([[NSCharacterSet whitespaceCharacterSet] characterIsMember: [_data characterAtIndex: _index]]) {
-        _index++;
     }
     if ([_data characterAtIndex: _index] == L'/') {
         symlen = [self getSymLength: @"/*"];
@@ -194,6 +194,24 @@
 
 - (void)reset { 
     _index = 0;
+}
+
+- (void)removeAll:(NSString *)token { 
+    NSString *currentToken;
+    NSUInteger oldIndex = _index, start, finish;
+    [self reset];
+    while ((currentToken = [self nextToken]) != nil) {
+        if ([currentToken isEqualTo: token]) {
+            start = _index - currentToken.length;
+            finish = _index;
+            _data = [_data stringByReplacingCharactersInRange: NSMakeRange(start, finish - start) withString: @""];
+            if (finish < oldIndex) {
+                oldIndex -= finish - start;
+            }
+            _index = start;
+        }
+    }
+    _index = oldIndex;
 }
 
 @end

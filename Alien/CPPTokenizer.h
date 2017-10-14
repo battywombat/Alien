@@ -41,4 +41,6 @@
 
 -(void)filter: (NSString *)from to: (NSString *) end;
 
+-(void)removeAll: (NSString *)token;
+
 @end

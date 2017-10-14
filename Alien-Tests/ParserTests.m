@@ -78,11 +78,16 @@ static NSString *classdefn = @"class A {\n%@\n};";
 
 - (void)testParseMethod {
     MethodDefinition *m;
-    [_parser parseString: [NSString stringWithFormat: classdefn, @"std::string dothing();"]];
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"std::string\n dothing();"]];
     m = _parser.defns[@"A"].methods[0];
     XCTAssert([m.returnType isEqualTo: @"std::string"]);
     XCTAssert(m.arguments.count == 0);
     XCTAssert([m.name isEqualTo: @"dothing"]);
+}
+
+- (void)testNestedClass {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"class B {};"]];
+    XCTAssert([_parser defns].count == 2);
 }
 
 

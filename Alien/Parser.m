@@ -19,9 +19,6 @@
     _defines = [[NSMutableDictionary alloc] init];
     _defns = [[NSMutableDictionary alloc] init];
     _states = [[Stack alloc] init];
-    self.parserState.currentAccessLevel = PUBLIC;
-    self.parserState.inClass = false;
-    self.parserState.stub = false;
     return self;
 }
 
@@ -32,6 +29,17 @@
     _defines = [[NSMutableDictionary alloc] init];
     _states = [[Stack alloc] init];
     return self;
+}
+
+- (void)preprocessFile
+{
+    NSString *token;
+    while ((token = [_tokens nextToken]) != nil) {
+        if ([token isEqualTo: @"#"]) {
+             [self handlePreprocessorCommand];
+        }
+    }
+    [_tokens reset];
 }
 
 - (void)handlePreprocessorCommand
@@ -101,37 +109,26 @@
 
 -(void) parseString: (NSString *) str
 {
+    NSString *currentToken;
     _tokens = [[CPPTokenizer alloc] initFromString: str];
     [[TypeManager singleton] startNewFile];
     [_tokens filter: @"/*" to: @"*/"];
     [_tokens filter: @"//" to: @"\n"];
-    while ([self parseDecl: _tokens]) {
-
-    }
-}
-
-- (BOOL) parseDecl: (CPPTokenizer *) tokens
-{
-    NSString *currentToken = [_tokens nextToken];
-    while ([currentToken isEqualTo: @"\n"]) {
-        currentToken = [_tokens nextToken];
-    }
-    if (currentToken == nil) {
-        return false;
-    }
-    if ([currentToken isEqualTo: @"#"]) {
-        [self handlePreprocessorCommand];
-    }
-    else if (self.parserState.inClass) {
-        [_tokens rewind];
-        [self handleInClass];
-    }
-    else {
+    [self preprocessFile];
+    [_tokens filter: @"#" to: @"\n"];
+    [_tokens removeAll: @"\n"];
+    while ((currentToken = [_tokens nextToken]) != nil) {
+        while ([currentToken isEqualTo: @"\n"]) {
+            currentToken = [_tokens nextToken];
+        }
         if ([currentToken isEqualTo: @"class"]) {
             [self handleClassDefn];
         }
+        else if (self.parserState != nil) {
+            [_tokens rewind];
+            [self handleInClass];
+        }
     }
-    return true;
 }
 
 -(void) parseFile: (NSString *) file
@@ -181,7 +178,6 @@
     }
     else if ([currentToken isEqualTo: @"}"]) { // End of class
         [self addClassDefn];
-        [self parserState].inClass = false;
         [_tokens skipUntil: @";"];
     }
     else {
@@ -252,8 +248,7 @@
         superClassName = @"NSObject";
     }
     self.parserState.stub = false;
-    currentToken = [_tokens nextToken];
-    [self parserState].inClass = true;
+//    currentToken = [_tokens nextToken];
 }
 
 -(void) addClassDefn
@@ -268,6 +263,7 @@
     if (_defns[n.className] == nil || _defns[n.className].stub) {
         _defns[n.className] = n;
     }
+    [_states pop];
 }
 
 - (void)throwException : (NSString *) message {
@@ -278,7 +274,7 @@
 
 - (ParserState *)parserState {
     if (_states.count == 0) {
-        [_states push: [[ParserState alloc] init]];
+        return nil;
     }
     return [_states peek];
 }
