@@ -68,12 +68,6 @@
     [self testTokens: tokenizer shouldEqual: tokens];
 }
 
-- (void)testAmpersand {
-    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"&&&"];
-    [tokenizer nextToken];
-    XCTAssertThrows([tokenizer nextToken], @"Invalid string should throw exception");
-}
-
 -(void)testSkipUntil {
     CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"// b \n c"];
     id tokens = @[ @"c" ];
@@ -109,6 +103,11 @@
     [tokenizer nextToken];
     [tokenizer filter: @"/*" to: @"*/"];
     [self testTokens: tokenizer shouldEqual: @[@"b", @"d"]];
+}
+
+- (void)testTokenizeGeneric {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"std::vector<std::string>"];
+    [self testTokens: tokenizer shouldEqual: @[@"std", @"::", @"vector", @"<", @"std", @"::", @"string", @">"]];
 }
 
 -(void) testTokens: (CPPTokenizer *)tokenizer shouldEqual: (NSArray<NSString *> *)tokens {

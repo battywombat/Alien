@@ -21,7 +21,7 @@ enum AccessLevel {
 
 @interface ClassDefinition : NSObject
 
-@property (readonly) NSString *className;
+@property (readonly) NSString *name;
 @property (readonly) NSArray<MethodDefinition *> *methods;
 @property BOOL stub;
 

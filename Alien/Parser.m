@@ -189,10 +189,10 @@
 - (NSArray<NSArray<NSString *> *> *)parseArgs
 {
     NSMutableArray<NSArray<NSString *> *> *args = [[NSMutableArray alloc] init];
-    NSArray<NSString *> *argument;
+    NSArray *argument;
     NSString *currentToken;
     NSString *name;
-    NSString *type;
+    TypeDefinition *type;
     if (![[_tokens nextToken] isEqualTo: @"("]) {
         [self throwException: @"Expected '('"];
     }
@@ -217,7 +217,7 @@
 
 - (void) parseMember: (CPPTokenizer *)tokens
 {
-    NSString *returnType = [[TypeManager singleton] parseType: tokens];
+    TypeDefinition *returnType = [[TypeManager singleton] parseType: tokens];
     NSString *name = [_tokens nextToken];
     if ([[_tokens nextToken] isEqualTo: @";"]) { // This is a field
         return;
@@ -260,8 +260,8 @@
     else {
         n = [[ClassDefinition alloc] init: self.parserState.className withMethods: self.parserState.methods];
     }
-    if (_defns[n.className] == nil || _defns[n.className].stub) {
-        _defns[n.className] = n;
+    if (_defns[n.name] == nil || _defns[n.name].stub) {
+        _defns[n.name] = n;
     }
     [_states pop];
 }

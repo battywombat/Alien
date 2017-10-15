@@ -12,6 +12,7 @@
 #import "ClassDefinition.h"
 #import "Stack.h"
 #import "ParserState.h"
+#import "TypeDefinition.h"
 
 @interface Parser : NSObject
 {

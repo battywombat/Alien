@@ -29,50 +29,99 @@
     self = [super init];
     _basicNamespaces = [[NSMutableDictionary alloc] init];
     [_basicNamespaces addEntriesFromDictionary: @{
-                                                  @"std" : @[ @"string", @"vector" ]
+                                                  @"std" : @[
+                                                          [[TypeDefinition alloc] initWithName: @"string" inNamespace: @"std"],
+                                                          [[TypeDefinition alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
+                                                          [[TypeDefinition alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
+                                                          ]
                                                   }];
     _basicTypes = [[NSMutableArray alloc] init];
     _qualifiers = @[ @"short", @"long", @"unsigned" ];
-    [_basicTypes addObjectsFromArray: @[ @"int", @"char", @"float", @"double" ]];
+    [_basicTypes addObjectsFromArray: @[
+                                        [TypeDefinition intType],
+                                        [TypeDefinition charType],
+                                        [TypeDefinition floatType],
+                                        [TypeDefinition doubleType]
+                                        ]];
     return self;
 }
 
--(NSString *)parseType: (CPPTokenizer *) tokens
+-(TypeDefinition *)parseType: (CPPTokenizer *) tokens
 {
-    NSString *ty;
+    TypeDefinition *ty = [[TypeDefinition alloc] init];
+    TypeDefinition *template = nil;
     NSString *current = [tokens nextToken];
-    NSArray<NSString *> *nsContents = [self namespaces][current];
+    NSArray<TypeDefinition *> *nsContents = [self namespaces][current];
     if (nsContents != nil) {
-        if (![@"::" isEqualTo: [tokens nextToken]]) {
+        BOOL flag = false;
+        ty.containingNamespace = current;
+        if (![[tokens nextToken] isEqualTo: @"::"]) {
             return nil;
         }
-        NSString *subType = [tokens nextToken];
-        if (![nsContents containsObject: subType]) {
+        ty.name = [tokens nextToken];
+        for (TypeDefinition *defn in  nsContents) {
+            if ([defn.name isEqualTo: ty.name]) {
+                template = defn;
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
             return nil;
         }
-        ty = [NSString stringWithFormat: @"%@::%@", current, subType];
     }
     else if ([[self qualifiers] containsObject: current]) {
-        ty = current;
+        [ty.qualifiers addObject: current];
         while ([[self qualifiers] containsObject: current = [tokens nextToken]]) {
-            ty = [ty stringByAppendingString: [NSString stringWithFormat: @" %@", current]];
+            [ty.qualifiers addObject: current];
         }
-        ty = [ty stringByAppendingString: [NSString stringWithFormat: @" %@", current]];
     }
-    else if ([[self types] containsObject: current]) {
-        ty = current;
+    if ([self typeWithName: current]) {
+        template = [self typeWithName: current];
+        ty.name = current;
+        ty.containingNamespace = template.containingNamespace;
     }
-    else {
-        @throw [NSException exceptionWithName: @"Syntax Error"
-                                       reason: [NSString stringWithFormat: @"Invalid type %@", current]
-                                     userInfo: nil];
+    
+    if (template != nil && template.typeParameters.count > 0) {
+        NSUInteger nTemplates = template.typeParameters.count;
+        if (![[tokens nextToken] isEqualTo: @"<"]) {
+            return nil;
+        }
+        while (nTemplates--) {
+            [ty.typeParameters addObject: [self parseType: tokens]];
+            if (nTemplates > 0) {
+                if (![[tokens nextToken] isEqualTo: @","]) {
+                    return nil;
+                }
+            }
+        }
+        if (![[tokens nextToken] isEqualTo: @">"]) {
+            return nil;
+        }
     }
     while ([current = [tokens nextToken] isEqualTo: @"*"] || [current isEqualTo: @"&"]) {
-        ty = [NSString stringWithFormat: @"%@ %@", ty, current];
-        current = [tokens nextToken];
+        ty.indirectionCount++;
     }
     [tokens rewind];
     return ty;
+}
+
+-(TypeDefinition *)typeWithName: (NSString *)name
+{
+    for (TypeDefinition *defn in _types) {
+        if ([defn.name isEqualTo: name]) {
+            return defn;
+        }
+    }
+    return nil;
+}
+
+- (NSUInteger) countCharacter: (NSString *) str containing: (NSString *) c
+{
+    NSRegularExpression *exp = [NSRegularExpression regularExpressionWithPattern: [NSString stringWithFormat: @"%@", c]
+                                                                         options: NSRegularExpressionCaseInsensitive
+                                                                           error: nil];
+    return [exp numberOfMatchesInString: str options: 0 range: NSMakeRange(0, [str length])];
 }
 
 -(void) startNewFile
@@ -83,7 +132,7 @@
 
 - (void) useNamespace: (NSString *)ns
 {
-    NSArray<NSString *> *arr = [self namespaces][ns];
+    NSArray<TypeDefinition *> *arr = [self namespaces][ns];
     if (ns == nil) {
         NSException *exception = [NSException
                                   exceptionWithName: @"InvalidNamespaceException"
@@ -91,7 +140,9 @@
                                   userInfo: nil];
         @throw exception;
     }
-    [_types addObjectsFromArray: arr];
+    for (TypeDefinition *obj in arr) {
+        [_types addObject: obj];
+    }
 }
 
 - (void) addNamespace: (NSString *)ns

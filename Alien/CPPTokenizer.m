@@ -18,7 +18,6 @@
     _data = s;
     _inLineComment = false;
     _inMultilineComment = false;
-    _opWasLast = false;
     return self;
 }
 
@@ -92,20 +91,16 @@
     }
     else if ([operators characterIsMember: [_data characterAtIndex: _index]]) {
         symlen = 1;
-        _opWasLast = true;
     }
     else if ([_data characterAtIndex: _index] == L'"') {
         NSMutableCharacterSet *s = [[NSMutableCharacterSet alloc] init];
         [s addCharactersInString: @"\""];
         symlen = [self getSymLengthExculdingSet: s] + 1;
-        _opWasLast = false;
     }
     else if ([[NSCharacterSet letterCharacterSet] characterIsMember: [_data characterAtIndex: _index]] || [_data characterAtIndex: _index] == L'_') {
         symlen = [self getSymLengthInSet: symbols exculding: nil];
-        _opWasLast = false;
     }
     else if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember: [_data characterAtIndex: _index]]) {
-        _opWasLast = false;
         symlen = [self getSymLengthInSet: [NSCharacterSet decimalDigitCharacterSet] exculding: [NSCharacterSet letterCharacterSet]];
     }    else {
         symlen = 1;
@@ -128,12 +123,8 @@
 
 -(int)getSymLength: (NSString *)next
 {
-    if (_opWasLast && !_inLineComment && !_inMultilineComment) {
-        [self throwException: _index+1];
-    }
     NSMutableCharacterSet *set = [[NSMutableCharacterSet alloc] init];
     [set addCharactersInString: next];
-    _opWasLast = true;
     return _index < _data.length - 1 && [set characterIsMember: [_data characterAtIndex: _index+1]] ? 2 : 1;
 }
 

@@ -17,6 +17,7 @@
     BOOL _inLineComment;
     BOOL _inMultilineComment;
     BOOL _opWasLast;
+    BOOL _prevOpWasLast;
 }
 
 -(id)initFromString: (NSString *) s;

@@ -18,11 +18,11 @@
     _name = name;
     _type = INSTANCE;
     _arguments = [[NSArray alloc] init];
-    _returnType = @"void";
+    _returnType = [TypeDefinition voidType];
     return self;
 }
 
--(id)init: (NSString *) name returnType: (NSString *) returnType withArguments: (NSArray<NSArray<NSString *> *> *) arguments {
+-(id)init: (NSString *) name returnType: (TypeDefinition *) returnType withArguments: (NSArray<NSArray *> *) arguments {
     self = [super init];
     _name = name;
     _type = INSTANCE;
@@ -31,12 +31,12 @@
     return self;
 }
 
-- (id)init:(NSString *)name withArguments:(NSArray<NSArray<NSString *> *> *)arguments ofType:(enum MethodType)type { 
+- (id)init:(NSString *)name withArguments:(NSArray<NSArray *> *)arguments ofType:(enum MethodType)type {
     self = [super init];
     _name = name;
     _type = type;
     _arguments = arguments;
-    _returnType = @"void";
+    _returnType = [TypeDefinition voidType];
     return self;
 }
 
@@ -45,7 +45,7 @@
     _name = name;
     _type = type;
     _arguments = [[NSArray alloc] init];
-    _returnType = @"void";
+    _returnType = [TypeDefinition voidType];
     return self;
 }
 

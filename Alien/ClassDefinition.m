@@ -14,7 +14,7 @@
 
 - (id)init:(NSString *)name withMethods:(NSArray *)methods {
     self = [super init];
-    _className = name;
+    _name = name;
     _methods = methods;
     _stub = false;
     return self;
@@ -22,7 +22,7 @@
 
 - (id)init:(NSString *)name {
     self = [super init];
-    _className = name;
+    _name = name;
     _stub = true;
     return self;
 }

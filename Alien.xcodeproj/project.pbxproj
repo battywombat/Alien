@@ -21,6 +21,8 @@
 		D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
 		D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
 		D99ED2CA1F8F0F3F00A1B984 /* ParserDefn.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */; };
+		D9D960FD1F93067900D6B6F7 /* TypeDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D960FC1F93067900D6B6F7 /* TypeDefinition.m */; };
+		D9D960FE1F9310D700D6B6F7 /* TypeDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D960FC1F93067900D6B6F7 /* TypeDefinition.m */; };
 		D9F550F41F87F16800201D7D /* Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F31F87F16800201D7D /* Parser.m */; };
 		D9F550F81F897A5000201D7D /* TypeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550F71F897A5000201D7D /* TypeManager.m */; };
 		D9F551001F8BF92D00201D7D /* TokenizerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */; };
@@ -76,6 +78,8 @@
 		D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPPTokenizer.m; sourceTree = "<group>"; };
 		D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPPTokenizer.h; sourceTree = "<group>"; };
 		D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ParserDefn.plist; sourceTree = "<group>"; };
+		D9D960FB1F93067900D6B6F7 /* TypeDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeDefinition.h; sourceTree = "<group>"; };
+		D9D960FC1F93067900D6B6F7 /* TypeDefinition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeDefinition.m; sourceTree = "<group>"; };
 		D9F550F31F87F16800201D7D /* Parser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Parser.m; sourceTree = "<group>"; };
 		D9F550F51F87F17200201D7D /* Parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
 		D9F550F61F897A2400201D7D /* TypeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeManager.h; sourceTree = "<group>"; };
@@ -146,6 +150,8 @@
 				D9463E891F91B7760071DAB3 /* Stack.m */,
 				D9463E8B1F91B9AB0071DAB3 /* ParserState.h */,
 				D9463E8C1F91B9AB0071DAB3 /* ParserState.m */,
+				D9D960FB1F93067900D6B6F7 /* TypeDefinition.h */,
+				D9D960FC1F93067900D6B6F7 /* TypeDefinition.m */,
 			);
 			path = Alien;
 			sourceTree = "<group>";
@@ -258,6 +264,7 @@
 				D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */,
 				D9463E8D1F91B9AB0071DAB3 /* ParserState.m in Sources */,
 				D9348ED71F873B360095FB29 /* MethodDefinition.m in Sources */,
+				D9D960FD1F93067900D6B6F7 /* TypeDefinition.m in Sources */,
 				D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */,
 				D9F550F41F87F16800201D7D /* Parser.m in Sources */,
 				D96312261F8D9853004E1E0D /* RadixTree.m in Sources */,
@@ -270,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9D960FE1F9310D700D6B6F7 /* TypeDefinition.m in Sources */,
 				D93DE31B1F91CDCE00C92A4B /* Stack.m in Sources */,
 				D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */,
 				D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */,
