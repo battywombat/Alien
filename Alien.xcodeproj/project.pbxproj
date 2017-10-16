@@ -21,6 +21,7 @@
 		D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
 		D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
 		D99ED2CA1F8F0F3F00A1B984 /* ParserDefn.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */; };
+		D9A955901F956B42007F3D8E /* TypeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A9558F1F956B42007F3D8E /* TypeTests.m */; };
 		D9D83DAE1F94F72C00FC9957 /* TypeDeclaration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D83DAD1F94F72C00FC9957 /* TypeDeclaration.m */; };
 		D9D83DAF1F94F73700FC9957 /* TypeDeclaration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D83DAD1F94F72C00FC9957 /* TypeDeclaration.m */; };
 		D9D83DB21F95045C00FC9957 /* FieldDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D83DB11F95045C00FC9957 /* FieldDefinition.m */; };
@@ -82,6 +83,7 @@
 		D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPPTokenizer.m; sourceTree = "<group>"; };
 		D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPPTokenizer.h; sourceTree = "<group>"; };
 		D99ED2C91F8F0F3F00A1B984 /* ParserDefn.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ParserDefn.plist; sourceTree = "<group>"; };
+		D9A9558F1F956B42007F3D8E /* TypeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeTests.m; sourceTree = "<group>"; };
 		D9D83DAC1F94F72C00FC9957 /* TypeDeclaration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeDeclaration.h; sourceTree = "<group>"; };
 		D9D83DAD1F94F72C00FC9957 /* TypeDeclaration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeDeclaration.m; sourceTree = "<group>"; };
 		D9D83DB01F95045C00FC9957 /* FieldDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FieldDefinition.h; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				D9F551011F8BF92D00201D7D /* Info.plist */,
 				D92329A21F8C66ED00005A26 /* ParserTests.m */,
 				D92329A41F8C7D3600005A26 /* TypeManagerTests.m */,
+				D9A9558F1F956B42007F3D8E /* TypeTests.m */,
 			);
 			path = "Alien-Tests";
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9D83DB31F95065A00FC9957 /* FieldDefinition.m in Sources */,
+				D9A955901F956B42007F3D8E /* TypeTests.m in Sources */,
 				D9D83DAF1F94F73700FC9957 /* TypeDeclaration.m in Sources */,
 				D9D960FE1F9310D700D6B6F7 /* Type.m in Sources */,
 				D93DE31B1F91CDCE00C92A4B /* Stack.m in Sources */,

@@ -23,6 +23,8 @@
 
 -(id)initWithType: (TypeDeclaration *) type;
 
+-(NSString *)typeForNS;
+
 -(BOOL)addQualifier: (NSString *) qualifier;
 
 @end

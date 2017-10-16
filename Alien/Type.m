@@ -29,4 +29,41 @@
     return true;
 }
 
+- (NSString *)typeForNS {
+    NSMutableString *s = [[NSMutableString alloc] init];
+    NSUInteger i;
+    if (_qualifiers.count > 0) {
+        i = _qualifiers.count;
+        while (i--) {
+            [s appendString: [NSString stringWithFormat: @"%@ ", _qualifiers[i]]];
+        }
+    }
+    [s appendString: [_typeDecl nameforNS]];
+    i = _typeParameters.count;
+    if (_typeParameters.count > 0) {
+        [s appendString: @"<"];
+        for (int j = 0; j < i; j++) {
+            [s appendString: [_typeParameters[j] typeForNS]];
+            if (!(j == i-1)) {
+                [s appendString: @","];
+            }
+        }
+        [s appendString: @">"];
+    }
+    i = _indirectionCount;
+    if (![[_typeDecl nameforNS] isEqualTo: _typeDecl.name]) {
+        i++;
+    }
+    if (i > 0) {
+        [s appendString: @" "];
+        while (i--) {
+            [s appendString: @"*"];
+        }
+        if (_constPtr) {
+            [s appendString: @" const"];
+        }
+    }
+    return s;
+}
+
 @end

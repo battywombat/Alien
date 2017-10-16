@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface TypeDeclaration : NSObject
+{
+    @private
+    NSString *_customName;
+}
 
 @property NSString *name;
 @property NSString *containingNamespace;
@@ -17,13 +21,18 @@
 -(id)init;
 
 -(id) initWithName: (NSString *) name inNamespace: (NSString *)ns;
+-(id) initWithName: (NSString *) name inNamespace: (NSString *)ns withCustomName: (NSString *) otherName;
 -(id) initWithName: (NSString *) name inNamespace: (NSString *)ns withParams: (NSUInteger) nParams;
+- (NSString *) nameforNS;
 
 + (TypeDeclaration *)doubleType;
 + (TypeDeclaration *)floatType;
 + (TypeDeclaration *)charType;
 + (TypeDeclaration *)voidType;
 + (TypeDeclaration *)intType;
++ (TypeDeclaration *)stringType;
++ (TypeDeclaration *)vectorType;
++ (TypeDeclaration *)mapType;
 
 
 @end
