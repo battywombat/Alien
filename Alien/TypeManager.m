@@ -13,6 +13,132 @@
 
 @implementation TypeManager
 
+enum TokenType {
+    INVALID,
+    NAMESPACE,
+    TYPENAME,
+    QUALIFIER,
+    REFERENCE,
+    BEGIN_TYPE_PARAM,
+    CONTINUE_TYPE_PARAM,
+    END_TYPE_PARAM,
+    POINTER
+};
+
+- (enum TokenType)tokenType: (NSString *) token withTypes: (NSArray *)validTypes {
+    if ([self typeWithName: token fromDefns: validTypes]) {
+        return TYPENAME;
+    }
+    else if (_namespaces[token] != nil) {
+        return NAMESPACE;
+    }
+    else if ([_qualifiers containsObject: token]) {
+        return QUALIFIER;
+    }
+    else if ([token isEqualTo: @"*"]) {
+        return POINTER;
+    }
+    else if ([token isEqualTo: @"&"]) {
+        return REFERENCE;
+    }
+    else if ([token isEqualTo: @"<"]) {
+        return BEGIN_TYPE_PARAM;
+    }
+    else if ([token isEqualTo: @","]) {
+        return CONTINUE_TYPE_PARAM;
+    }
+    else if ([token isEqualTo: @">"]) {
+        return END_TYPE_PARAM;
+    }
+    return INVALID;
+}
+
+- (TypeDefinition *)parseType:(CPPTokenizer *)tokens {
+    TypeDefinition *ty = [[TypeDefinition alloc] init];
+    TypeDefinition *param;
+    NSString *token = [tokens nextToken];
+    NSArray<TypeDefinition *> *validTypes = _types;
+    int setNamespaces = 0;
+    int typeParamState = 0;
+    int ptrState = 0;
+    enum TokenType tokentype;
+    while ((tokentype = [self tokenType: token withTypes: validTypes]) != INVALID) {
+        if (typeParamState > 0 && tokentype != CONTINUE_TYPE_PARAM && tokentype != END_TYPE_PARAM) {
+            return nil;
+        }
+        if (setNamespaces > 0 && tokentype != TYPENAME) {
+            return nil;
+        }
+        if (ptrState > 0 && tokentype != POINTER && tokentype != QUALIFIER && ![token isEqualTo: @"const"]) {
+            return nil;
+        }
+        switch (tokentype) {
+            case NAMESPACE:
+                validTypes = _namespaces[token];
+                if (validTypes == nil) {
+                    return nil; // invalid namespace
+                }
+                if (![[tokens nextToken] isEqualTo: @"::"]) {
+                    return nil;
+                }
+                ty.containingNamespace = token;
+                setNamespaces = 1;
+                break;
+            case TYPENAME:
+                ty.name = token;
+                ty.containingNamespace = [self typeWithName: ty.name fromDefns: validTypes].containingNamespace;
+                break;
+            case QUALIFIER:
+                if (ptrState > 0) {
+                    ty.constPtr = true;
+                }
+                else {
+                    [ty.qualifiers addObject: token];
+                }
+                break;
+            case REFERENCE:
+                ty.isReference = true;
+                break;
+            case POINTER:
+                ptrState = 1;
+                ty.indirectionCount++;
+                break;
+            case BEGIN_TYPE_PARAM:
+                typeParamState = 1;
+            case CONTINUE_TYPE_PARAM:
+                if (typeParamState != 1) {
+                    [tokens rewind];
+                    return ty;
+                }
+                param = [self parseType: tokens];
+                if (param == nil) {
+                    return nil;
+                }
+                [ty.typeParameters addObject: param];
+                break;
+            case END_TYPE_PARAM:
+                if (typeParamState == 0) {
+                    [tokens rewind];
+                    return ty; // We've run off the edge during a recursive traversal. Or someone stuck a comma in the middle of their code.
+                }
+                typeParamState = 0;
+                break;
+            default:
+                return nil;
+        }
+        setNamespaces = setNamespaces ? setNamespaces+1 : 0;
+        if (setNamespaces == 3) {
+            setNamespaces = 0;
+            validTypes = _types;
+        }
+        token = [tokens nextToken];
+    
+    }
+    
+    
+    return ty;
+}
+
 + (TypeManager *)singleton {
     static TypeManager *_singleton;
     static dispatch_once_t oncePredicate;
@@ -36,7 +162,7 @@
                                                           ]
                                                   }];
     _basicTypes = [[NSMutableArray alloc] init];
-    _qualifiers = @[ @"short", @"long", @"unsigned" ];
+    _qualifiers = @[ @"short", @"long", @"unsigned", @"const" ];
     [_basicTypes addObjectsFromArray: @[
                                         [TypeDefinition intType],
                                         [TypeDefinition charType],
@@ -46,69 +172,9 @@
     return self;
 }
 
--(TypeDefinition *)parseType: (CPPTokenizer *) tokens
+-(TypeDefinition *)typeWithName: (NSString *)name fromDefns: (NSArray<TypeDefinition *> *) defns;
 {
-    TypeDefinition *ty = [[TypeDefinition alloc] init];
-    TypeDefinition *template = nil;
-    NSString *current = [tokens nextToken];
-    NSArray<TypeDefinition *> *nsContents = [self namespaces][current];
-    if (nsContents != nil) {
-        BOOL flag = false;
-        ty.containingNamespace = current;
-        if (![[tokens nextToken] isEqualTo: @"::"]) {
-            return nil;
-        }
-        ty.name = [tokens nextToken];
-        for (TypeDefinition *defn in  nsContents) {
-            if ([defn.name isEqualTo: ty.name]) {
-                template = defn;
-                flag = true;
-                break;
-            }
-        }
-        if (!flag) {
-            return nil;
-        }
-    }
-    else if ([[self qualifiers] containsObject: current]) {
-        [ty.qualifiers addObject: current];
-        while ([[self qualifiers] containsObject: current = [tokens nextToken]]) {
-            [ty.qualifiers addObject: current];
-        }
-    }
-    if ([self typeWithName: current]) {
-        template = [self typeWithName: current];
-        ty.name = current;
-        ty.containingNamespace = template.containingNamespace;
-    }
-    
-    if (template != nil && template.typeParameters.count > 0) {
-        NSUInteger nTemplates = template.typeParameters.count;
-        if (![[tokens nextToken] isEqualTo: @"<"]) {
-            return nil;
-        }
-        while (nTemplates--) {
-            [ty.typeParameters addObject: [self parseType: tokens]];
-            if (nTemplates > 0) {
-                if (![[tokens nextToken] isEqualTo: @","]) {
-                    return nil;
-                }
-            }
-        }
-        if (![[tokens nextToken] isEqualTo: @">"]) {
-            return nil;
-        }
-    }
-    while ([current = [tokens nextToken] isEqualTo: @"*"] || [current isEqualTo: @"&"]) {
-        ty.indirectionCount++;
-    }
-    [tokens rewind];
-    return ty;
-}
-
--(TypeDefinition *)typeWithName: (NSString *)name
-{
-    for (TypeDefinition *defn in _types) {
+    for (TypeDefinition *defn in defns) {
         if ([defn.name isEqualTo: name]) {
             return defn;
         }
@@ -116,12 +182,11 @@
     return nil;
 }
 
-- (NSUInteger) countCharacter: (NSString *) str containing: (NSString *) c
-{
-    NSRegularExpression *exp = [NSRegularExpression regularExpressionWithPattern: [NSString stringWithFormat: @"%@", c]
-                                                                         options: NSRegularExpressionCaseInsensitive
-                                                                           error: nil];
-    return [exp numberOfMatchesInString: str options: 0 range: NSMakeRange(0, [str length])];
+- (void)checkQualifiers: (TypeDefinition *)ty from: (CPPTokenizer *) tokens {
+    NSString *current;
+    while ([[self qualifiers] containsObject: current = [tokens nextToken]]) {
+        [ty.qualifiers addObject: current];
+    }
 }
 
 -(void) startNewFile

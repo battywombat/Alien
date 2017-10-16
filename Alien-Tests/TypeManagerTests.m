@@ -72,6 +72,24 @@
     XCTAssert([ty.typeParameters[0].name isEqualTo: @"vector"] && [ty.typeParameters[0].typeParameters[0].name isEqualTo: @"int"]);
 }
 
+- (void)testPointer {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"int *"];
+    TypeDefinition *ty = [[TypeManager singleton] parseType: tokenizer];
+    XCTAssert([ty.name isEqualTo: @"int"] && ty.indirectionCount == 1);
+}
+
+- (void)testReference {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"int&"];
+    TypeDefinition *ty = [[TypeManager singleton] parseType: tokenizer];
+    XCTAssert([ty.name isEqualTo: @"int"] && ty.isReference);
+}
+
+- (void)testConst {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"char * const"];
+    TypeDefinition *ty = [[TypeManager singleton] parseType: tokenizer];
+    XCTAssert([ty.name isEqualTo: @"char"] && ty.indirectionCount == 1 && ty.qualifiers.count == 0 && ty.constPtr);
+}
+
 
 
 @end

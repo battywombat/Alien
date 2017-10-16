@@ -15,6 +15,8 @@
 @property NSMutableArray <TypeDefinition *> *typeParameters;
 @property NSMutableArray <NSString *> *qualifiers;
 @property NSUInteger indirectionCount;
+@property BOOL isReference;
+@property BOOL constPtr;
 
 -(id)init;
 

@@ -18,6 +18,8 @@
     _typeParameters = [[NSMutableArray alloc] init];
     _qualifiers = [[NSMutableArray alloc] init];
     _indirectionCount = 0;
+    _isReference = false;
+    _constPtr = false;
     return self;
     
 }
@@ -30,6 +32,8 @@
     _typeParameters = [[NSMutableArray alloc] init];
     _qualifiers = [[NSMutableArray alloc] init];
     _indirectionCount = 0;
+    _isReference = false;
+    _constPtr = false;
     return self;
 }
 
@@ -44,6 +48,8 @@
     }
     _qualifiers = [[NSMutableArray alloc] init];
     _indirectionCount = 0;
+    _isReference = false;
+    _constPtr = false;
     return self;
 }
 
