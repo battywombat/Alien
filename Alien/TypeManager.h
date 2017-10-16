@@ -9,23 +9,24 @@
 #import <Foundation/Foundation.h>
 
 #import "CPPTokenizer.h"
-#import "TypeDefinition.h"
+#import "Type.h"
+#import "TypeDeclaration.h"
 
 @interface TypeManager : NSObject
 
-@property (readonly) NSMutableDictionary<NSString *, NSArray<TypeDefinition *> *> *basicNamespaces;
+@property (readonly) NSMutableDictionary<NSString *, NSArray<TypeDeclaration *> *> *basicNamespaces;
 
-@property (readonly) NSMutableArray<TypeDefinition *> *basicTypes;
+@property (readonly) NSMutableArray<TypeDeclaration *> *basicTypes;
 
-@property (readonly) NSMutableDictionary<NSString *, NSArray<TypeDefinition *> *> *namespaces;
+@property (readonly) NSMutableDictionary<NSString *, NSArray<TypeDeclaration *> *> *namespaces;
 
 @property (readonly) NSArray<NSString *> *qualifiers;
 
-@property (readonly) NSMutableArray<TypeDefinition *> *types;
+@property (readonly) NSMutableArray<TypeDeclaration *> *types;
 
 - (id)init;
 
-- (TypeDefinition *)parseType: (CPPTokenizer *) tokens;
+- (Type *)parseType: (CPPTokenizer *) tokens;
 
 - (void) startNewFile;
 

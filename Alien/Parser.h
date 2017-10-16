@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 
 #import "CPPTokenizer.h"
-#import "ClassDefinition.h"
+#import "ClassDeclaration.h"
 #import "Stack.h"
 #import "ParserState.h"
-#import "TypeDefinition.h"
+#import "Type.h"
 
 @interface Parser : NSObject
 {
@@ -20,10 +20,11 @@
     Stack<ParserState *> *_states;
     CPPTokenizer *_tokens;
     TypeManager *_types;
+    NSArray<NSArray *> *_fields;
 }
 
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;
-@property (readonly) NSMutableDictionary<NSString *, ClassDefinition *> *defns;
+@property (readonly) NSMutableDictionary<NSString *, ClassDeclaration *> *defns;
 
 - (id) init;
 

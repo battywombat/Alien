@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Parser.h"
+#import "TypeDeclaration.h"
 
 @implementation Parser
 
@@ -17,7 +18,7 @@
     return [self initWithState: [[NSMutableDictionary alloc] init] defines: [[NSMutableDictionary alloc] init]];
 }
 
--(id)initWithState: (NSMutableDictionary<NSString *, ClassDefinition *> *) defns defines: (NSMutableDictionary<NSString *, NSString *> *) defines
+-(id)initWithState: (NSMutableDictionary<NSString *, ClassDeclaration *> *) defns defines: (NSMutableDictionary<NSString *, NSString *> *) defines
 {
     self = [super init];
     _tokens = nil;
@@ -190,7 +191,7 @@
     NSArray *argument;
     NSString *currentToken;
     NSString *name;
-    TypeDefinition *type;
+    Type *type;
     NSString *t = [_tokens nextToken];
     if (![t isEqualTo: @"("]) {
         [self throwException: @"Expected '('"];
@@ -216,7 +217,7 @@
 
 - (void) parseMember: (CPPTokenizer *)tokens
 {
-    TypeDefinition *returnType = [_types parseType: tokens];
+    Type *returnType = [_types parseType: tokens];
     NSString *name = [_tokens nextToken];
     if ([[_tokens nextToken] isEqualTo: @";"]) { // This is a field
         return;
@@ -247,17 +248,17 @@
         superClassName = @"NSObject";
     }
     self.parserState.stub = false;
-//    currentToken = [_tokens nextToken];
+    [_types.types addObject: [[ClassDeclaration alloc] initWithName: self.parserState.className inNamespace: nil]];
 }
 
 -(void) addClassDefn
 {
-    ClassDefinition *n;
+    ClassDeclaration *n;
     if (self.parserState.stub) {
-        n = [[ClassDefinition alloc] init: self.parserState.className];
+        n = [[ClassDeclaration alloc] init: self.parserState.className];
     }
     else {
-        n = [[ClassDefinition alloc] init: self.parserState.className withMethods: self.parserState.methods];
+        n = [[ClassDeclaration alloc] init: self.parserState.className withMethods: self.parserState.methods andFields: _fields];
     }
     if (_defns[n.name] == nil || _defns[n.name].stub) {
         _defns[n.name] = n;

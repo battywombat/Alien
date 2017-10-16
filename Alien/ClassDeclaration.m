@@ -8,21 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ClassDefinition.h"
+#import "ClassDeclaration.h"
 
-@implementation ClassDefinition
+@implementation ClassDeclaration
 
-- (id)init:(NSString *)name withMethods:(NSArray *)methods {
-    self = [super init];
-    _name = name;
+- (id)init:(NSString *)name withMethods:(NSArray *)methods andFields:(NSArray<NSArray *> *)fields {
+    self = [super initWithName: name inNamespace: nil];
     _methods = methods;
+    _fields = fields;
     _stub = false;
     return self;
 }
 
 - (id)init:(NSString *)name {
-    self = [super init];
-    _name = name;
+    self = [super initWithName: name inNamespace: nil];
     _stub = true;
     return self;
 }

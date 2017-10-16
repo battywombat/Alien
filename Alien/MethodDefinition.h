@@ -11,7 +11,7 @@
 
 
 #import "CPPTokenizer.h"
-#import "TypeDefinition.h"
+#import "Type.h"
 
 enum MethodType {
     INIT = 0,
@@ -25,10 +25,10 @@ enum MethodType {
 @property (readonly) enum MethodType type;
 @property (readonly) NSArray<NSArray *> *arguments;
 @property (readonly) NSString *name;
-@property (readonly) TypeDefinition *returnType;
+@property (readonly) Type *returnType;
 
 -(id)init: (NSString *) name withArguments: (NSArray<NSArray *> *) arguments ofType:(enum MethodType) type;
--(id)init: (NSString *) name returnType: (TypeDefinition *) returnType withArguments: (NSArray<NSArray *> *) arguments;
+-(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments;
 -(id)init: (NSString *) name;
 -(id)init: (NSString *) name ofType: (enum MethodType) type;
 

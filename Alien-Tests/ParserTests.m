@@ -80,7 +80,7 @@ static NSString *classdefn = @"class A {\n%@\n};";
     MethodDefinition *m;
     [_parser parseString: [NSString stringWithFormat: classdefn, @"std::string\n dothing();"]];
     m = _parser.defns[@"A"].methods[0];
-    XCTAssert([m.returnType.name isEqualTo: @"string"] && [m.returnType.containingNamespace isEqualTo: @"std"]);
+    XCTAssert([m.returnType.typeDecl.name isEqualTo: @"string"] && [m.returnType.typeDecl.containingNamespace isEqualTo: @"std"]);
     XCTAssert(m.arguments.count == 0);
     XCTAssert([m.name isEqualTo: @"dothing"]);
 }
@@ -88,6 +88,14 @@ static NSString *classdefn = @"class A {\n%@\n};";
 - (void)testNestedClass {
     [_parser parseString: [NSString stringWithFormat: classdefn, @"class B {};"]];
     XCTAssert([_parser defns].count == 2);
+}
+
+- (void)testContainingPointer {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A *_child"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil);
+    XCTAssert([c.name isEqualTo: @"A"]);
+    XCTAssert([c.fields count] == 1);
 }
 
 

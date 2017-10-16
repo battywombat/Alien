@@ -11,6 +11,7 @@
 #import "CPPTokenizer.h"
 #import "TypeManager.h"
 #import "MethodDefinition.h"
+#import "TypeDeclaration.h"
 
 enum AccessLevel {
     NONE = 0,
@@ -19,13 +20,13 @@ enum AccessLevel {
     PROTECTED
 };
 
-@interface ClassDefinition : NSObject
+@interface ClassDeclaration : TypeDeclaration
 
-@property (readonly) NSString *name;
 @property (readonly) NSArray<MethodDefinition *> *methods;
+@property (readonly) NSArray<NSArray *> *fields;
 @property BOOL stub;
 
--(id)init: (NSString *) name withMethods: (NSArray *) methods;
+-(id)init: (NSString *) name withMethods: (NSArray *) methods andFields: (NSArray<NSArray *> *) fields;
 -(id)init: (NSString *) name;
 
 

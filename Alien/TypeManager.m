@@ -19,18 +19,18 @@
     _basicNamespaces = [[NSMutableDictionary alloc] init];
     [_basicNamespaces addEntriesFromDictionary: @{
                                                   @"std" : @[
-                                                          [[TypeDefinition alloc] initWithName: @"string" inNamespace: @"std"],
-                                                          [[TypeDefinition alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
-                                                          [[TypeDefinition alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
+                                                          [[TypeDeclaration alloc] initWithName: @"string" inNamespace: @"std"],
+                                                          [[TypeDeclaration alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
+                                                          [[TypeDeclaration alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
                                                           ]
                                                   }];
     _basicTypes = [[NSMutableArray alloc] init];
     _qualifiers = @[ @"short", @"long", @"unsigned", @"const" ];
     [_basicTypes addObjectsFromArray: @[
-                                        [TypeDefinition intType],
-                                        [TypeDefinition charType],
-                                        [TypeDefinition floatType],
-                                        [TypeDefinition doubleType]
+                                        [TypeDeclaration intType],
+                                        [TypeDeclaration charType],
+                                        [TypeDeclaration floatType],
+                                        [TypeDeclaration doubleType]
                                         ]];
     return self;
 }
@@ -79,11 +79,11 @@ enum TokenType {
     return INVALID;
 }
 
-- (TypeDefinition *)parseType:(CPPTokenizer *)tokens {
-    TypeDefinition *ty = [[TypeDefinition alloc] init];
-    TypeDefinition *param;
+- (Type *)parseType:(CPPTokenizer *)tokens {
+    Type *ty = [[Type alloc] init];
+    Type *param;
     NSString *token = [tokens nextToken];
-    NSArray<TypeDefinition *> *validTypes = _types;
+    NSArray<TypeDeclaration *> *validTypes = _types;
     int setNamespaces = 0;
     int typeParamState = 0;
     int ptrState = 0;
@@ -111,12 +111,10 @@ enum TokenType {
                 if (![[tokens nextToken] isEqualTo: @"::"]) {
                     return nil;
                 }
-                ty.containingNamespace = token;
                 setNamespaces = 1;
                 break;
             case TYPENAME:
-                ty.name = token;
-                ty.containingNamespace = [self typeWithName: ty.name fromDefns: validTypes].containingNamespace;
+                ty.typeDecl = [self typeWithName: token fromDefns: validTypes];
                 break;
             case QUALIFIER:
                 if (ptrState > 0) {
@@ -153,7 +151,7 @@ enum TokenType {
                 typeParamState = 0;
                 break;
             case VOID:
-                ty.name = token;
+                ty.typeDecl = [TypeDeclaration voidType];
                 goto finish;
                 break; // just because...
             default:
@@ -169,15 +167,15 @@ enum TokenType {
     }
 finish:
     [tokens rewind];
-    if (ty.name == nil) {
+    if (ty.typeDecl == nil) {
         return nil;
     }
     return ty;
 }
 
--(TypeDefinition *)typeWithName: (NSString *)name fromDefns: (NSArray<TypeDefinition *> *) defns;
+-(TypeDeclaration *)typeWithName: (NSString *)name fromDefns: (NSArray<TypeDeclaration *> *) defns;
 {
-    for (TypeDefinition *defn in defns) {
+    for (TypeDeclaration *defn in defns) {
         if ([defn.name isEqualTo: name]) {
             return defn;
         }
@@ -193,7 +191,7 @@ finish:
 
 - (void) useNamespace: (NSString *)ns
 {
-    NSArray<TypeDefinition *> *arr = [self namespaces][ns];
+    NSArray<TypeDeclaration *> *arr = [self namespaces][ns];
     if (ns == nil) {
         NSException *exception = [NSException
                                   exceptionWithName: @"InvalidNamespaceException"
@@ -201,7 +199,7 @@ finish:
                                   userInfo: nil];
         @throw exception;
     }
-    for (TypeDefinition *obj in arr) {
+    for (TypeDeclaration *obj in arr) {
         [_types addObject: obj];
     }
 }

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ClassDefinition.h"
+#import "ClassDeclaration.h"
 #import "MethodDefinition.h"
 
 @interface ParserState : NSObject
