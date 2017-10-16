@@ -12,7 +12,7 @@
 
 @implementation ClassDeclaration
 
-- (id)init:(NSString *)name withMethods:(NSArray *)methods andFields:(NSArray<NSArray *> *)fields {
+- (id)init:(NSString *)name withMethods:(NSArray *)methods andFields:(NSArray<FieldDefinition *> *)fields {
     self = [super initWithName: name inNamespace: nil];
     _methods = methods;
     _fields = fields;

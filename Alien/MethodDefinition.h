@@ -12,6 +12,8 @@
 
 #import "CPPTokenizer.h"
 #import "Type.h"
+#import "FieldDefinition.h"
+
 
 enum MethodType {
     INIT = 0,
@@ -20,16 +22,13 @@ enum MethodType {
     DESTRUCTOR
 };
 
-@interface MethodDefinition : NSObject
+@interface MethodDefinition : FieldDefinition
 
-@property (readonly) enum MethodType type;
+@property (readonly) enum MethodType methodType;
 @property (readonly) NSArray<NSArray *> *arguments;
-@property (readonly) NSString *name;
-@property (readonly) Type *returnType;
 
--(id)init: (NSString *) name withArguments: (NSArray<NSArray *> *) arguments ofType:(enum MethodType) type;
--(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments;
--(id)init: (NSString *) name;
--(id)init: (NSString *) name ofType: (enum MethodType) type;
+-(id)init: (NSString *) name withArguments: (NSArray<NSArray *> *) arguments ofType:(enum MethodType) type withAccessLevel: (enum AccessLevel) accessLevel;
+-(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments withAccessLevel: (enum AccessLevel) accessLevel;
+-(id)init: (NSString *) name ofType: (enum MethodType) type withAccessLevel: (enum AccessLevel) accessLevel;
 
 @end

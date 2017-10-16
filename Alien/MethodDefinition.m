@@ -12,31 +12,22 @@
 
 @implementation MethodDefinition
 
-
-- (id)init:(NSString *)name {
-    return [self init: name withArguments: @[] ofType: INSTANCE];
-}
-
--(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments {
-    self = [super init];
-    _name = name;
-    _type = INSTANCE;
+-(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments withAccessLevel: (enum AccessLevel) accessLevel {
+    self = [super initWithName: name andType: returnType andAccessLevel: accessLevel];
+    _methodType = INSTANCE;
     _arguments = arguments;
-    _returnType = returnType;
     return self;
 }
 
-- (id)init:(NSString *)name withArguments:(NSArray<NSArray *> *)arguments ofType:(enum MethodType)type {
-    self = [super init];
-    _name = name;
-    _type = type;
+- (id)init:(NSString *)name withArguments:(NSArray<NSArray *> *)arguments ofType:(enum MethodType)type withAccessLevel: (enum AccessLevel) accessLevel {
+    self = [super initWithName: name andType: nil andAccessLevel: accessLevel];
     _arguments = arguments;
-    _returnType = [[Type alloc] initWithType: [TypeDeclaration voidType]];
+    _methodType = type;
     return self;
 }
 
-- (id)init:(NSString *)name ofType:(enum MethodType)type {
-    return [self init: name withArguments: @[] ofType: type];
+- (id)init:(NSString *)name ofType:(enum MethodType)type withAccessLevel: (enum AccessLevel) accessLevel {
+    return [self init: name withArguments: @[] ofType: type withAccessLevel: accessLevel];
 }
 
 @end

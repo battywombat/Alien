@@ -80,7 +80,7 @@ static NSString *classdefn = @"class A {\n%@\n};";
     MethodDefinition *m;
     [_parser parseString: [NSString stringWithFormat: classdefn, @"std::string\n dothing();"]];
     m = _parser.defns[@"A"].methods[0];
-    XCTAssert([m.returnType.typeDecl.name isEqualTo: @"string"] && [m.returnType.typeDecl.containingNamespace isEqualTo: @"std"]);
+    XCTAssert([m.type.typeDecl.name isEqualTo: @"string"] && [m.type.typeDecl.containingNamespace isEqualTo: @"std"]);
     XCTAssert(m.arguments.count == 0);
     XCTAssert([m.name isEqualTo: @"dothing"]);
 }
@@ -91,12 +91,110 @@ static NSString *classdefn = @"class A {\n%@\n};";
 }
 
 - (void)testContainingPointer {
-    [_parser parseString: [NSString stringWithFormat: classdefn, @"A *_child"]];
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A *_child;"]];
     ClassDeclaration *c = _parser.defns[@"A"];
     XCTAssert(c != nil);
     XCTAssert([c.name isEqualTo: @"A"]);
     XCTAssert([c.fields count] == 1);
 }
+
+- (void)testSameReturnType {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A something();"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert([m.type.typeDecl.name isEqualTo: @"A"]);
+    XCTAssert([m.name isEqualTo: @"something"]);
+    XCTAssert(m.arguments.count == 0);
+}
+
+- (void)testSameFieldType {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A _something;"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.fields.count == 1);
+    FieldDefinition *m = c.fields[0];
+    XCTAssert([m.type.typeDecl.name isEqualTo: @"A"]);
+    XCTAssert([m.name isEqualTo: @"_something"]);
+}
+
+- (void)testConstructorEmptyArgs {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A();"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+}
+
+- (void)testConstructorWithArgs {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A(int a, std::string b);"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+    XCTAssert(m.arguments.count == 2);
+}
+
+- (void)testConstructorWithArgsNoNames {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A(int, std::string);"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+    XCTAssert(m.arguments.count == 2);
+}
+
+- (void)testMultipleFieldsSameLine {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A(int, std::string); int *_f;"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+    XCTAssert(m.arguments.count == 2);
+    XCTAssert(c.fields.count == 1);
+    FieldDefinition *field = c.fields[0];
+    XCTAssert([field.name isEqualTo: @"_f"]);
+    XCTAssert(field.type.indirectionCount == 1);
+    XCTAssert([field.type.typeDecl.name isEqualTo: @"int"]);
+}
+
+- (void)testMultipleFieldsTwoLines {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"A(int, std::string);\n int *_f;"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+    XCTAssert(m.arguments.count == 2);
+    XCTAssert(c.fields.count == 1);
+    FieldDefinition *field = c.fields[0];
+    XCTAssert([field.name isEqualTo: @"_f"]);
+    XCTAssert(field.type.indirectionCount == 1);
+    XCTAssert([field.type.typeDecl.name isEqualTo: @"int"]);
+}
+
+- (void) testAccesSpecifiers {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"public: A(int);\n private: int *_f;"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == INIT);
+    XCTAssert(m.arguments.count == 1);
+    XCTAssert(m.accessLevel == PUBLIC);
+    XCTAssert(c.fields.count == 1);
+    FieldDefinition *field = c.fields[0];
+    XCTAssert([field.name isEqualTo: @"_f"]);
+    XCTAssert(field.type.indirectionCount == 1);
+    XCTAssert([field.type.typeDecl.name isEqualTo: @"int"]);
+    XCTAssert(field.accessLevel == PRIVATE);
+}
+
+- (void) testDestructor {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"~A();"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.methodType == DESTRUCTOR);
+}
+
 
 
 @end

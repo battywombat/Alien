@@ -17,6 +17,7 @@
     _methods = [[NSMutableArray alloc] init];
     _className = nil;
     _currentAccessLevel = PRIVATE;
+    _fields = [[NSMutableArray alloc] init];
     return self;
 }
 

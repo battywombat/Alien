@@ -17,6 +17,7 @@
 @property enum AccessLevel currentAccessLevel;
 @property NSMutableArray <MethodDefinition *> *methods;
 @property NSString *className;
+@property NSMutableArray<FieldDefinition *> *fields;
 
 -(id) init;
 

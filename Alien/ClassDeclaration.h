@@ -13,20 +13,13 @@
 #import "MethodDefinition.h"
 #import "TypeDeclaration.h"
 
-enum AccessLevel {
-    NONE = 0,
-    PUBLIC,
-    PRIVATE,
-    PROTECTED
-};
-
 @interface ClassDeclaration : TypeDeclaration
 
 @property (readonly) NSArray<MethodDefinition *> *methods;
-@property (readonly) NSArray<NSArray *> *fields;
+@property (readonly) NSArray<FieldDefinition *> *fields;
 @property BOOL stub;
 
--(id)init: (NSString *) name withMethods: (NSArray *) methods andFields: (NSArray<NSArray *> *) fields;
+-(id)init: (NSString *) name withMethods: (NSArray *) methods andFields: (NSArray<FieldDefinition *> *) fields;
 -(id)init: (NSString *) name;
 
 

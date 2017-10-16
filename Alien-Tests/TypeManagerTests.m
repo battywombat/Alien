@@ -154,4 +154,10 @@
     XCTAssert(ty == nil);
 }
 
+- (void)testTilde {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"~Tokenizer"];
+    Type *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
 @end

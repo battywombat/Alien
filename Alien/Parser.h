@@ -20,7 +20,6 @@
     Stack<ParserState *> *_states;
     CPPTokenizer *_tokens;
     TypeManager *_types;
-    NSArray<NSArray *> *_fields;
 }
 
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;

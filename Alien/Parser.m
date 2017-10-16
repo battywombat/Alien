@@ -136,52 +136,75 @@
 }
 
 - (void)handleInClass {
-    NSString *currentToken = [_tokens nextToken];
-    if ([currentToken isEqualTo: @"public"]) {
+    NSString *currentToken;
+    Type *ty = [_types parseType: _tokens];
+    if (ty == nil) {
         currentToken = [_tokens nextToken];
-        if ([currentToken isEqualTo: @":"]) {
-            self.parserState.currentAccessLevel = PUBLIC;
+        if ([currentToken isEqualTo: @"public"]) {
+            currentToken = [_tokens nextToken];
+            if ([currentToken isEqualTo: @":"]) {
+                self.parserState.currentAccessLevel = PUBLIC;
+            }
+            else {
+                [self throwException: @"expected ':'"];
+            }
+        }
+        else if ([currentToken isEqualTo: @"private"]) {
+            currentToken = [_tokens nextToken];
+            if ([currentToken isEqualTo: @":"]) {
+                self.parserState.currentAccessLevel = PRIVATE;
+            }
+            else {
+                [self throwException: @"Expected ':'"];
+            }
+        }
+        else if ([currentToken isEqualTo: @"protected"]) {
+            if ([currentToken isEqualTo: @":"]) {
+                self.parserState.currentAccessLevel = PROTECTED;
+            }
+            else {
+                [self throwException: @"Expected ':'"];
+            }
+        }
+        else if ([currentToken isEqualTo: @"}"]) { // End of class
+            [self addClassDefn];
+            [_tokens skipUntil: @";"];
+        }
+        else if ([currentToken isEqualTo: @"~"])  {
+            if (![[_tokens nextToken] isEqualTo: self.parserState.className]) {
+                [self throwException: [NSString stringWithFormat: @"Destructor Error: Expected %@", self.parserState.className]];
+            }
+            NSArray *args = [self parseArgs];
+            if (args.count != 0) {
+                [self throwException: @"Destructor should have no arguments"];
+            }
+            if (![[_tokens nextToken] isEqualTo: @";"]) {
+                [self throwException: @"Expected ';'"];
+            }
+            [self.parserState.methods addObject: [[MethodDefinition alloc] init: [@"~" stringByAppendingString: self.parserState.className]
+                                                                         ofType: DESTRUCTOR
+                                                                withAccessLevel: self.parserState.currentAccessLevel]];
         }
         else {
-            [self throwException: @"expected ':'"];
+            [self throwException: [NSString stringWithFormat: @"Unrecognized token: %@", currentToken]];
         }
-    }
-    else if ([currentToken isEqualTo: @"private"]) {
-        currentToken = [_tokens nextToken];
-        if ([currentToken isEqualTo: @":"]) {
-            self.parserState.currentAccessLevel = PRIVATE;
-        }
-        else {
-            [self throwException: @"Expected ':'"];
-        }
-    }
-    else if ([currentToken isEqualTo: @"protected"]) {
-        if ([currentToken isEqualTo: @":"]) {
-            self.parserState.currentAccessLevel = PROTECTED;
-        }
-        else {
-            [self throwException: @"Expected ':'"];
-        }
-    }
-    else if ([currentToken isEqualTo: self.parserState.className]) { // Constructor
-        NSArray<NSArray<NSString *> *> *args = [self parseArgs];
-        [self.parserState.methods addObject: [[MethodDefinition alloc] init: self.parserState.className
-                                              withArguments: args
-                                                     ofType: INIT]];
-        [_tokens skipUntil: @";"];
-    }
-    else if ([currentToken isEqualTo: [@"~" stringByAppendingString: self.parserState.className]]) { // Destructor
-        [self.parserState.methods addObject: [[MethodDefinition alloc] init: [@"~" stringByAppendingString: self.parserState.className]
-                                                     ofType: DESTRUCTOR]];
-        [_tokens skipUntil: @";"];
-    }
-    else if ([currentToken isEqualTo: @"}"]) { // End of class
-        [self addClassDefn];
-        [_tokens skipUntil: @";"];
+
     }
     else {
-        [_tokens rewind];
-        [self parseMember: _tokens];
+        currentToken = [_tokens nextToken];
+        if ([currentToken isEqualTo: @"("] && [ty.typeDecl.name isEqualTo: self.parserState.className] && !ty.isReference && ty.indirectionCount == 0) { // Constructor
+            [_tokens rewind];
+            NSArray<NSArray<NSString *> *> *args = [self parseArgs];
+            [self.parserState.methods addObject: [[MethodDefinition alloc] init: self.parserState.className
+                                                                  withArguments: args
+                                                                         ofType: INIT
+                                                                withAccessLevel: self.parserState.currentAccessLevel]];
+            [_tokens skipUntil: @";"];
+        }
+        else {
+            [_tokens rewind];
+            [self parseMember: ty];
+        }
     }
 }
 
@@ -200,8 +223,11 @@
         [_tokens rewind];
         type = [_types parseType: _tokens];
         name = [_tokens nextToken];
-        if ([name isEqualTo: @","]) {
-            name = nil;
+        if ([name isEqualTo: @","] || [name isEqualTo: @")"]) {
+            if ([name isEqualTo: @")"]) {
+                [_tokens rewind];
+            }
+            name = @"";
         }
         else {
             currentToken = [_tokens nextToken];
@@ -215,18 +241,20 @@
     return args;
 }
 
-- (void) parseMember: (CPPTokenizer *)tokens
+- (void) parseMember: (Type *) ty
 {
-    Type *returnType = [_types parseType: tokens];
     NSString *name = [_tokens nextToken];
     if ([[_tokens nextToken] isEqualTo: @";"]) { // This is a field
+        FieldDefinition *field = [[FieldDefinition alloc] initWithName: name andType: ty andAccessLevel: self.parserState.currentAccessLevel];
+        [self.parserState.fields addObject: field];
         return;
     }
     [_tokens rewind];
     NSArray<NSArray<NSString *> *> *args = [self parseArgs];
     [self.parserState.methods addObject: [[MethodDefinition alloc] init: name
-                                             returnType: returnType
-                                          withArguments: args]];
+                                             returnType: ty
+                                          withArguments: args
+                                          withAccessLevel: self.parserState.currentAccessLevel]];
     [_tokens skipUntil: @";"];
 }
 
@@ -258,7 +286,7 @@
         n = [[ClassDeclaration alloc] init: self.parserState.className];
     }
     else {
-        n = [[ClassDeclaration alloc] init: self.parserState.className withMethods: self.parserState.methods andFields: _fields];
+        n = [[ClassDeclaration alloc] init: self.parserState.className withMethods: self.parserState.methods andFields: self.parserState.fields];
     }
     if (_defns[n.name] == nil || _defns[n.name].stub) {
         _defns[n.name] = n;
