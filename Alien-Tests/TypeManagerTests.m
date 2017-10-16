@@ -100,9 +100,10 @@
 }
 
 - (void)testVoid {
-    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"void"];
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"void abc"];
     Type *ty = [_types parseType: tokenizer];
     XCTAssert([ty.typeDecl.name isEqualTo: @"void"]);
+    XCTAssert([[tokenizer nextToken] isEqualTo: @"abc"]);
 }
 
 - (void)testInvalidQualifier {

@@ -16,6 +16,7 @@
     self = [super initWithName: name andType: returnType andAccessLevel: accessLevel];
     _methodType = INSTANCE;
     _arguments = arguments;
+    _isVirtual = false;
     return self;
 }
 
@@ -23,6 +24,7 @@
     self = [super initWithName: name andType: nil andAccessLevel: accessLevel];
     _arguments = arguments;
     _methodType = type;
+    _isVirtual = false;
     return self;
 }
 

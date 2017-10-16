@@ -21,6 +21,7 @@ enum AccessLevel {
 @property NSString *name;
 @property Type *type;
 @property enum AccessLevel accessLevel;
+@property BOOL isStatic;
 
 -(id)initWithName : (NSString *) name andType: (Type *) type;
 

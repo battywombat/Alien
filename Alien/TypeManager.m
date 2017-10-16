@@ -152,6 +152,7 @@ enum TokenType {
                 break;
             case VOID:
                 ty.typeDecl = [TypeDeclaration voidType];
+                [tokens nextToken]; // Need to make sure we don't rewind to 'void'
                 goto finish;
                 break; // just because...
             default:

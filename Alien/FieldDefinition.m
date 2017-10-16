@@ -20,6 +20,7 @@
     _name = name;
     _type = type;
     _accessLevel = accessLevel;
+    _isStatic = false;
     return self;
 }
 

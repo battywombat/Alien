@@ -125,7 +125,7 @@
         }
         else if (self.parserState != nil) {
             [_tokens rewind];
-            [self handleInClass];
+            [self parseClassDecl];
         }
     }
 }
@@ -135,8 +135,19 @@
     [self parseString: [NSString stringWithContentsOfFile: file usedEncoding: nil error: nil]];
 }
 
-- (void)handleInClass {
+- (void)parseClassDecl {
     NSString *currentToken;
+    NSString *spec = [_tokens nextToken];
+    BOOL isVirtual = false, isStatic = false;
+    if ([spec isEqualTo: @"virtual"]) {
+        isVirtual = true;
+    }
+    else if ([spec isEqualTo: @"static"]) {
+        isStatic = true;
+    }
+    else {
+        [_tokens rewind];
+    }
     Type *ty = [_types parseType: _tokens];
     if (ty == nil) {
         currentToken = [_tokens nextToken];
@@ -181,9 +192,11 @@
             if (![[_tokens nextToken] isEqualTo: @";"]) {
                 [self throwException: @"Expected ';'"];
             }
-            [self.parserState.methods addObject: [[MethodDefinition alloc] init: [@"~" stringByAppendingString: self.parserState.className]
-                                                                         ofType: DESTRUCTOR
-                                                                withAccessLevel: self.parserState.currentAccessLevel]];
+            MethodDefinition *d = [[MethodDefinition alloc] init: [@"~" stringByAppendingString: self.parserState.className]
+                                                          ofType: DESTRUCTOR
+                                                 withAccessLevel: self.parserState.currentAccessLevel];
+            d.isVirtual = isVirtual;
+            [self.parserState.methods addObject: d];
         }
         else {
             [self throwException: [NSString stringWithFormat: @"Unrecognized token: %@", currentToken]];
@@ -193,6 +206,9 @@
     else {
         currentToken = [_tokens nextToken];
         if ([currentToken isEqualTo: @"("] && [ty.typeDecl.name isEqualTo: self.parserState.className] && !ty.isReference && ty.indirectionCount == 0) { // Constructor
+            if (isVirtual || isStatic) {
+                [self throwException: @"Constructor cannot be static or virtual"];
+            }
             [_tokens rewind];
             NSArray<NSArray<NSString *> *> *args = [self parseArgs];
             [self.parserState.methods addObject: [[MethodDefinition alloc] init: self.parserState.className
@@ -203,7 +219,7 @@
         }
         else {
             [_tokens rewind];
-            [self parseMember: ty];
+            [self parseMember: ty isVirtual: isVirtual isStatic: isStatic];
         }
     }
 }
@@ -241,21 +257,33 @@
     return args;
 }
 
-- (void) parseMember: (Type *) ty
+- (void) parseMember: (Type *) ty isVirtual: (BOOL) isVirtual isStatic: (BOOL) isStatic
 {
     NSString *name = [_tokens nextToken];
     if ([[_tokens nextToken] isEqualTo: @";"]) { // This is a field
+        if (isVirtual) {
+            [self throwException: @"Field cannot be virtual"];
+        }
         FieldDefinition *field = [[FieldDefinition alloc] initWithName: name andType: ty andAccessLevel: self.parserState.currentAccessLevel];
+        field.isStatic = isStatic;
         [self.parserState.fields addObject: field];
         return;
+    } // Otherwise, must be method
+    if (isVirtual && isStatic) {
+        [self throwException: @"Method cannot be both virtual and static"];
     }
     [_tokens rewind];
     NSArray<NSArray<NSString *> *> *args = [self parseArgs];
-    [self.parserState.methods addObject: [[MethodDefinition alloc] init: name
-                                             returnType: ty
-                                          withArguments: args
-                                          withAccessLevel: self.parserState.currentAccessLevel]];
-    [_tokens skipUntil: @";"];
+    MethodDefinition *d = [[MethodDefinition alloc] init: name
+                                              returnType: ty
+                                           withArguments: args
+                                         withAccessLevel: self.parserState.currentAccessLevel];
+    d.isVirtual = isVirtual;
+    d.isStatic = isStatic;
+    if (![[_tokens nextToken] isEqualTo: @";"]) {
+        [self throwException: @"Expected ';'"];
+    }
+    [self.parserState.methods addObject: d];
 }
 
 - (void)handleClassDefn {

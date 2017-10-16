@@ -195,6 +195,28 @@ static NSString *classdefn = @"class A {\n%@\n};";
     XCTAssert(m.methodType == DESTRUCTOR);
 }
 
+- (void) testParsesVirtual {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"virtual void abc();"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.methods.count == 1);
+    MethodDefinition *m = c.methods[0];
+    XCTAssert(m.isVirtual);
+    XCTAssert([m.name isEqualTo: @"abc"]);
+}
+
+- (void) testParsesStatic {
+    [_parser parseString: [NSString stringWithFormat: classdefn, @"static int _a;"]];
+    ClassDeclaration *c = _parser.defns[@"A"];
+    XCTAssert(c != nil && c.fields.count == 1);
+    FieldDefinition *f = c.fields[0];
+    XCTAssert(f.isStatic);
+}
+
+- (void) testThrowsVirtualAndStatic {
+    NSString *def =[NSString stringWithFormat: classdefn, @"virtual static void a();"];
+    XCTAssertThrows([_parser parseString: def]);
+}
+
 
 
 @end
