@@ -13,6 +13,28 @@
 
 @implementation TypeManager
 
+-(id)init
+{
+    self = [super init];
+    _basicNamespaces = [[NSMutableDictionary alloc] init];
+    [_basicNamespaces addEntriesFromDictionary: @{
+                                                  @"std" : @[
+                                                          [[TypeDefinition alloc] initWithName: @"string" inNamespace: @"std"],
+                                                          [[TypeDefinition alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
+                                                          [[TypeDefinition alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
+                                                          ]
+                                                  }];
+    _basicTypes = [[NSMutableArray alloc] init];
+    _qualifiers = @[ @"short", @"long", @"unsigned", @"const" ];
+    [_basicTypes addObjectsFromArray: @[
+                                        [TypeDefinition intType],
+                                        [TypeDefinition charType],
+                                        [TypeDefinition floatType],
+                                        [TypeDefinition doubleType]
+                                        ]];
+    return self;
+}
+
 enum TokenType {
     INVALID,
     NAMESPACE,
@@ -22,6 +44,7 @@ enum TokenType {
     BEGIN_TYPE_PARAM,
     CONTINUE_TYPE_PARAM,
     END_TYPE_PARAM,
+    VOID,
     POINTER
 };
 
@@ -49,6 +72,9 @@ enum TokenType {
     }
     else if ([token isEqualTo: @">"]) {
         return END_TYPE_PARAM;
+    }
+    else if ([token isEqualTo: @"void"]) {
+        return VOID;
     }
     return INVALID;
 }
@@ -107,8 +133,7 @@ enum TokenType {
                 typeParamState = 1;
             case CONTINUE_TYPE_PARAM:
                 if (typeParamState != 1) {
-                    [tokens rewind];
-                    return ty;
+                    goto finish;
                 }
                 param = [self parseType: tokens];
                 if (param == nil) {
@@ -118,11 +143,14 @@ enum TokenType {
                 break;
             case END_TYPE_PARAM:
                 if (typeParamState == 0) {
-                    [tokens rewind];
-                    return ty; // We've run off the edge during a recursive traversal. Or someone stuck a comma in the middle of their code.
+                    goto finish;
                 }
                 typeParamState = 0;
                 break;
+            case VOID:
+                ty.name = token;
+                goto finish;
+                break; // just because...
             default:
                 return nil;
         }
@@ -134,42 +162,9 @@ enum TokenType {
         token = [tokens nextToken];
     
     }
-    
-    
+finish:
+    [tokens rewind];
     return ty;
-}
-
-+ (TypeManager *)singleton {
-    static TypeManager *_singleton;
-    static dispatch_once_t oncePredicate;
-    
-    dispatch_once(&oncePredicate, ^{
-        _singleton = [[TypeManager alloc] init];
-    });
-    
-    return _singleton;
-}
-
--(id)init
-{
-    self = [super init];
-    _basicNamespaces = [[NSMutableDictionary alloc] init];
-    [_basicNamespaces addEntriesFromDictionary: @{
-                                                  @"std" : @[
-                                                          [[TypeDefinition alloc] initWithName: @"string" inNamespace: @"std"],
-                                                          [[TypeDefinition alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
-                                                          [[TypeDefinition alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
-                                                          ]
-                                                  }];
-    _basicTypes = [[NSMutableArray alloc] init];
-    _qualifiers = @[ @"short", @"long", @"unsigned", @"const" ];
-    [_basicTypes addObjectsFromArray: @[
-                                        [TypeDefinition intType],
-                                        [TypeDefinition charType],
-                                        [TypeDefinition floatType],
-                                        [TypeDefinition doubleType]
-                                        ]];
-    return self;
 }
 
 -(TypeDefinition *)typeWithName: (NSString *)name fromDefns: (NSArray<TypeDefinition *> *) defns;
@@ -180,13 +175,6 @@ enum TokenType {
         }
     }
     return nil;
-}
-
-- (void)checkQualifiers: (TypeDefinition *)ty from: (CPPTokenizer *) tokens {
-    NSString *current;
-    while ([[self qualifiers] containsObject: current = [tokens nextToken]]) {
-        [ty.qualifiers addObject: current];
-    }
 }
 
 -(void) startNewFile

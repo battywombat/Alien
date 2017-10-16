@@ -19,6 +19,7 @@
     @private
     Stack<ParserState *> *_states;
     CPPTokenizer *_tokens;
+    TypeManager *_types;
 }
 
 @property (readonly) NSMutableDictionary<NSString *, NSString *> *defines;

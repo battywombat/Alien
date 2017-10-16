@@ -14,12 +14,7 @@
 
 -(id)init
 {
-    self = [super init];
-    _tokens = nil;
-    _defines = [[NSMutableDictionary alloc] init];
-    _defns = [[NSMutableDictionary alloc] init];
-    _states = [[Stack alloc] init];
-    return self;
+    return [self initWithState: [[NSMutableDictionary alloc] init] defines: [[NSMutableDictionary alloc] init]];
 }
 
 -(id)initWithState: (NSMutableDictionary<NSString *, ClassDefinition *> *) defns defines: (NSMutableDictionary<NSString *, NSString *> *) defines
@@ -28,6 +23,9 @@
     _tokens = nil;
     _defines = [[NSMutableDictionary alloc] init];
     _states = [[Stack alloc] init];
+    _defns = defns;
+    _defines = defines;
+    _types = [[TypeManager alloc] init];
     return self;
 }
 
@@ -111,7 +109,7 @@
 {
     NSString *currentToken;
     _tokens = [[CPPTokenizer alloc] initFromString: str];
-    [[TypeManager singleton] startNewFile];
+    [_types startNewFile];
     [_tokens filter: @"/*" to: @"*/"];
     [_tokens filter: @"//" to: @"\n"];
     [self preprocessFile];
@@ -193,12 +191,13 @@
     NSString *currentToken;
     NSString *name;
     TypeDefinition *type;
-    if (![[_tokens nextToken] isEqualTo: @"("]) {
+    NSString *t = [_tokens nextToken];
+    if (![t isEqualTo: @"("]) {
         [self throwException: @"Expected '('"];
     }
     while (![currentToken = [_tokens nextToken] isEqualTo: @")"]) {
         [_tokens rewind];
-        type = [[TypeManager singleton] parseType: _tokens];
+        type = [_types parseType: _tokens];
         name = [_tokens nextToken];
         if ([name isEqualTo: @","]) {
             name = nil;
@@ -217,7 +216,7 @@
 
 - (void) parseMember: (CPPTokenizer *)tokens
 {
-    TypeDefinition *returnType = [[TypeManager singleton] parseType: tokens];
+    TypeDefinition *returnType = [_types parseType: tokens];
     NSString *name = [_tokens nextToken];
     if ([[_tokens nextToken] isEqualTo: @";"]) { // This is a field
         return;

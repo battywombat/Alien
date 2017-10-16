@@ -23,8 +23,6 @@
 
 @property (readonly) NSMutableArray<TypeDefinition *> *types;
 
-+ (TypeManager *)singleton;
-
 - (id)init;
 
 - (TypeDefinition *)parseType: (CPPTokenizer *) tokens;
