@@ -87,10 +87,16 @@
     XCTAssert([ty.name isEqualTo: @"int"] && ty.isReference);
 }
 
-- (void)testConst {
+- (void)testConstPtr {
     CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"char * const"];
     TypeDefinition *ty = [_types parseType: tokenizer];
     XCTAssert([ty.name isEqualTo: @"char"] && ty.indirectionCount == 1 && ty.qualifiers.count == 0 && ty.constPtr);
+}
+
+- (void)testConst {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"const char *"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert([ty.name isEqualTo: @"char"] && ty.indirectionCount == 1 && ty.qualifiers.count == 1 && [ty.qualifiers[0] isEqualTo: @"const"]);
 }
 
 - (void)testVoid {
@@ -99,6 +105,53 @@
     XCTAssert([ty.name isEqualTo: @"void"]);
 }
 
+- (void)testInvalidQualifier {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"char * unsigned"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
 
+- (void)testInvalidName {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"invalid"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
+- (void)testInvalidNamespace {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"fake::invalid"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
+- (void)testInvalidNamespaceContents {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"std::invalid"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
+- (void)testInvalidSymbolNotSkipped {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"("];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+    XCTAssert([[tokenizer nextToken] isEqualTo: @"("]);
+}
+
+- (void)testInvalidPointer {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"*char"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
+- (void)testInvalidReference {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"&char"];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
+
+- (void)testEmptyString {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"("];
+    TypeDefinition *ty = [_types parseType: tokenizer];
+    XCTAssert(ty == nil);
+}
 
 @end

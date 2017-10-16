@@ -87,6 +87,7 @@ enum TokenType {
     int setNamespaces = 0;
     int typeParamState = 0;
     int ptrState = 0;
+    int refState = 0;
     enum TokenType tokentype;
     while ((tokentype = [self tokenType: token withTypes: validTypes]) != INVALID) {
         if (typeParamState > 0 && tokentype != CONTINUE_TYPE_PARAM && tokentype != END_TYPE_PARAM) {
@@ -95,7 +96,10 @@ enum TokenType {
         if (setNamespaces > 0 && tokentype != TYPENAME) {
             return nil;
         }
-        if (ptrState > 0 && tokentype != POINTER && tokentype != QUALIFIER && ![token isEqualTo: @"const"]) {
+        if (ptrState > 0 && tokentype != POINTER && (tokentype != QUALIFIER || ![token isEqualTo: @"const"])) {
+            return nil;
+        }
+        if (refState > 0 && tokentype != POINTER) {
             return nil;
         }
         switch (tokentype) {
@@ -124,6 +128,7 @@ enum TokenType {
                 break;
             case REFERENCE:
                 ty.isReference = true;
+                refState = 1;
                 break;
             case POINTER:
                 ptrState = 1;
@@ -164,6 +169,9 @@ enum TokenType {
     }
 finish:
     [tokens rewind];
+    if (ty.name == nil) {
+        return nil;
+    }
     return ty;
 }
 
