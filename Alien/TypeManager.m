@@ -11,6 +11,7 @@
 #import "TypeManager.h"
 
 
+
 @implementation TypeManager
 
 -(id)init
@@ -19,9 +20,9 @@
     _basicNamespaces = [[NSMutableDictionary alloc] init];
     [_basicNamespaces addEntriesFromDictionary: @{
                                                   @"std" : @[
-                                                          [[TypeDeclaration alloc] initWithName: @"string" inNamespace: @"std"],
-                                                          [[TypeDeclaration alloc] initWithName: @"vector" inNamespace: @"std" withParams: 1],
-                                                          [[TypeDeclaration alloc] initWithName: @"map" inNamespace: @"std" withParams: 2]
+                                                          [TypeDeclaration vectorType],
+                                                          [TypeDeclaration stringType],
+                                                          [TypeDeclaration mapType]
                                                           ]
                                                   }];
     _basicTypes = [[NSMutableArray alloc] init];
@@ -30,7 +31,8 @@
                                         [TypeDeclaration intType],
                                         [TypeDeclaration charType],
                                         [TypeDeclaration floatType],
-                                        [TypeDeclaration doubleType]
+                                        [TypeDeclaration doubleType],
+                                        [TypeDeclaration boolType]
                                         ]];
     return self;
 }
@@ -96,7 +98,7 @@ enum TokenType {
         if (setNamespaces > 0 && tokentype != TYPENAME) {
             return nil;
         }
-        if (ptrState > 0 && tokentype != POINTER && (tokentype != QUALIFIER || ![token isEqualTo: @"const"])) {
+        if (ptrState > 0 && tokentype != END_TYPE_PARAM && tokentype != CONTINUE_TYPE_PARAM && tokentype != POINTER && (tokentype != QUALIFIER || ![token isEqualTo: @"const"])) {
             return nil;
         }
         if (refState > 0 && tokentype != POINTER) {
@@ -211,6 +213,16 @@ finish:
         return;
     }
     _namespaces[ns] = [[NSMutableArray alloc] init];
+}
+
+- (void)addType:(TypeDeclaration *)ty { 
+    for (int i = 0; i < _types.count; i++) {
+        if ([_types[i].name isEqualTo: ty.name] && [_types[i] class] == [ClassDeclaration class] && ((ClassDeclaration *)_types[i]).stub) {
+            [_types addObject: ty];
+            return;
+        }
+    }
+    [_types addObject: ty];
 }
 
 @end

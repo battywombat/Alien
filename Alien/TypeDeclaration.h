@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface TypeDeclaration : NSObject
-{
-    @private
-    NSString *_customName;
-}
 
 @property NSString *name;
 @property NSString *containingNamespace;
 @property NSUInteger nTypeParameters;
+@property NSString *customName;
 
 -(id)init;
 
@@ -33,6 +30,7 @@
 + (TypeDeclaration *)stringType;
 + (TypeDeclaration *)vectorType;
 + (TypeDeclaration *)mapType;
++ (TypeDeclaration *)boolType;
 
 
 @end

@@ -319,6 +319,7 @@
     if (_defns[n.name] == nil || _defns[n.name].stub) {
         _defns[n.name] = n;
     }
+    [_types addType: n];
     [_states pop];
 }
 

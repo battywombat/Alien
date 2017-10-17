@@ -80,8 +80,17 @@
     return defn;
 }
 
+
+
 - (NSString *) nameforNS {
     return _customName == nil ? self.name : _customName;
+}
+
++ (TypeDeclaration *)boolType { 
+    TypeDeclaration *defn = [[TypeDeclaration alloc] init];
+    defn.name = @"bool";
+    defn.customName = @"BOOL";
+    return defn;
 }
 
 @end

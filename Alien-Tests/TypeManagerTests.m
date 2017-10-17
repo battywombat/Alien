@@ -99,6 +99,20 @@
     XCTAssert([ty.typeDecl.name isEqualTo: @"char"] && ty.indirectionCount == 1 && ty.qualifiers.count == 1 && [ty.qualifiers[0] isEqualTo: @"const"]);
 }
 
+- (void)testGenericPtr {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"std::vector<int *>"];
+    Type *ty = [_types parseType: tokenizer];
+    XCTAssert([ty.typeDecl.name isEqualTo: @"vector"]);
+    XCTAssert(ty.typeParameters.count == 1 && [ty.typeParameters[0].typeDecl.name isEqualTo: @"int"]);
+}
+
+- (void)testGenericPtrTwoArgs {
+    CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"std::map<int *, int *>"];
+    Type *ty = [_types parseType: tokenizer];
+    XCTAssert([ty.typeDecl.name isEqualTo: @"map"]);
+    XCTAssert(ty.typeParameters.count == 2 && [ty.typeParameters[0].typeDecl.name isEqualTo: @"int"]);
+}
+
 - (void)testVoid {
     CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"void abc"];
     Type *ty = [_types parseType: tokenizer];

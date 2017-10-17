@@ -11,6 +11,9 @@
 #import "CPPTokenizer.h"
 #import "Type.h"
 #import "TypeDeclaration.h"
+#import "ClassDeclaration.h"
+
+@class ClassDeclaration;
 
 @interface TypeManager : NSObject
 
@@ -34,5 +37,6 @@
 
 - (void) addNamespace: (NSString *)ns;
 
+- (void) addType: (ClassDeclaration *) ty;
 
 @end
