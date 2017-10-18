@@ -25,6 +25,10 @@
 
 -(NSString *)typeForNS;
 
+-(NSString *)typeWithParens;
+
+-(NSString *)convertToNS: (NSString *) srcDecl dest: (NSString *) destDecl;
+
 -(BOOL)addQualifier: (NSString *) qualifier;
 
 @end

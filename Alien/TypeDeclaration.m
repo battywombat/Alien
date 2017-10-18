@@ -34,6 +34,25 @@
     return self;
 }
 
+- (NSString *) convertBlockNS: (NSString *) src to: (NSString *) dst {
+    NSMutableString *conv = [NSMutableString stringWithString: _convertBlockNSBase];
+    [conv replaceOccurrencesOfString: @"%a" withString: src options: NSLiteralSearch range: NSMakeRange(0, conv.length)];
+    [conv replaceOccurrencesOfString: @"%b" withString: dst options: NSLiteralSearch range: NSMakeRange(0, conv.length)];
+    return conv;
+}
+
+- (NSString *) typeInitNS {
+    return _typeInitNS;
+}
+
+- (void) setTypeInitNS: (NSString *) typeInitNS {
+    _typeInitNS = typeInitNS;
+}
+
+- (NSString *) nameforNS {
+    return _customName == nil ? self.name : _customName;
+}
+
 + (TypeDeclaration *)voidType {
     TypeDeclaration *defn = [[TypeDeclaration alloc] init];
     defn.name = @"void";
@@ -65,12 +84,15 @@
 }
 
 + (TypeDeclaration *)stringType {
-    return [[TypeDeclaration alloc] initWithName: @"string" inNamespace: @"std" withCustomName: @"NSString"];
+    TypeDeclaration *defn = [[TypeDeclaration alloc] initWithName: @"string" inNamespace: @"std" withCustomName: @"NSString"];
+    defn.typeInitNS= @"std::string([%@ UTF8String])";
+    return defn;
 }
 
 + (TypeDeclaration *)vectorType {
     TypeDeclaration *defn = [[TypeDeclaration alloc] initWithName: @"vector" inNamespace: @"std" withCustomName: @"NSMutableArray"];
     defn.nTypeParameters = 1;
+    defn.typeInitNS = @"std::vector()";
     return defn;
 }
 
@@ -78,12 +100,6 @@
     TypeDeclaration *defn = [[TypeDeclaration alloc] initWithName: @"map" inNamespace: @"std" withCustomName: @"NSMutableDictionary"];
     defn.nTypeParameters = 2;
     return defn;
-}
-
-
-
-- (NSString *) nameforNS {
-    return _customName == nil ? self.name : _customName;
 }
 
 + (TypeDeclaration *)boolType { 

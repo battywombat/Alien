@@ -225,4 +225,8 @@ finish:
     [_types addObject: ty];
 }
 
+- (void) generateTypeConverters {
+
+}
+
 @end

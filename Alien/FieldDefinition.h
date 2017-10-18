@@ -27,4 +27,6 @@ enum AccessLevel {
 
 -(id)initWithName : (NSString *) name andType: (Type *) type andAccessLevel: (enum AccessLevel) accessLevel;
 
+-(NSString *)createNSHeader;
+
 @end

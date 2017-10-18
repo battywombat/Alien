@@ -24,4 +24,14 @@
     return self;
 }
 
+- (NSString *)createNSHeader { 
+    NSMutableString *s = [[NSMutableString alloc] init];
+    [s appendString: @"@property "];
+    [s appendString: [[self type] typeForNS]];
+    [s appendString: @" "];
+    [s appendString: [self name]];
+    [s appendString: @";"];
+    return s;
+}
+
 @end

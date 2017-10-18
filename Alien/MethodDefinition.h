@@ -17,8 +17,7 @@
 
 enum MethodType {
     INIT = 0,
-    STATIC,
-    INSTANCE,
+    NORMAL,
     DESTRUCTOR
 };
 
@@ -28,8 +27,11 @@ enum MethodType {
 @property (readonly) NSArray<NSArray *> *arguments;
 @property BOOL isVirtual;
 
+-(id)init;
 -(id)init: (NSString *) name withArguments: (NSArray<NSArray *> *) arguments ofType:(enum MethodType) type withAccessLevel: (enum AccessLevel) accessLevel;
 -(id)init: (NSString *) name returnType: (Type *) returnType withArguments: (NSArray<NSArray *> *) arguments withAccessLevel: (enum AccessLevel) accessLevel;
 -(id)init: (NSString *) name ofType: (enum MethodType) type withAccessLevel: (enum AccessLevel) accessLevel;
+-(NSString *)createNSHeader;
+-(NSString *)createNSBody;
 
 @end

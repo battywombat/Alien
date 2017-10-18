@@ -66,4 +66,24 @@
     return s;
 }
 
+- (NSString *)typeWithParens { 
+    return [NSString stringWithFormat: @"(%@)", [self typeForNS]];
+}
+
+- (NSString *)typeInitNS: (NSString *) decl {
+    if ([self typeParameters].count == 0) {
+        [NSString stringWithFormat: [self typeDecl].typeInitNS, decl];
+    }
+    return nil; // TODO add initalizers with sub types
+}
+
+- (NSString *)convertToNS:(NSString *)srcDecl dest:(NSString *)destDecl {
+    NSString *initalizer = [NSString stringWithFormat: @" %@ %@ = %@;", [self typeForNS], srcDecl, [self typeInitNS: destDecl]];
+    NSString *convertBlock;
+    if ([self typeDecl].convertBlockNSBase != nil) {
+        convertBlock = [[self typeDecl] convertBlockNS: srcDecl to: destDecl];
+    }
+    return convertBlock == nil ? initalizer : [initalizer stringByAppendingString: convertBlock];
+}
+
 @end
