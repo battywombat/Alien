@@ -15,6 +15,7 @@
 @interface TypeManagerTests : XCTestCase
 
 @property TypeManager * types;
+@property ClassDeclaration *basicType;
 
 @end
 
@@ -24,6 +25,13 @@
     [super setUp];
     _types = [[TypeManager alloc] init];
     [_types startNewFile];
+    Type *vectorType = [[Type alloc] initWithType: [TypeDeclaration vectorType]];
+    [vectorType.typeParameters addObject: [[Type alloc] initWithType: [TypeDeclaration stringType]]];
+    _basicType = [[ClassDeclaration alloc] init: @"Test"
+                                    withMethods: @[
+                                                   [[MethodDefinition alloc] init: @"method1" withArguments: @[ @[vectorType, @"arg1"] ] ofType: NORMAL withAccessLevel: PUBLIC]
+                                                   ]
+                                      andFields: @[]];
 }
 
 - (void)testBasic {
@@ -173,6 +181,11 @@
     CPPTokenizer *tokenizer = [[CPPTokenizer alloc] initFromString: @"~Tokenizer"];
     Type *ty = [_types parseType: tokenizer];
     XCTAssert(ty == nil);
+}
+
+- (void)testGenerateConversions {
+    [_types addType: _basicType];
+    [_types generateConversions];
 }
 
 @end

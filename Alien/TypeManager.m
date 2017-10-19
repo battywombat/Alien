@@ -225,8 +225,27 @@ finish:
     [_types addObject: ty];
 }
 
-- (void) generateTypeConverters {
+- (void) generateTypeConverterFor: (NSString *)type {
 
+}
+
+- (void)generateConversions {
+    // first we find all type differences we need converters for
+    NSMutableSet<Type *> *needConvertersFor = [[NSMutableSet alloc] init];
+    for (TypeDeclaration *typeDecl in self.types) {
+        if (typeDecl.class == ClassDeclaration.class) {
+            ClassDeclaration *classDecl = (ClassDeclaration *)typeDecl;
+            for (MethodDefinition *mDecl in classDecl.methods) {
+                for (NSArray *arg in mDecl.arguments) {
+                    [needConvertersFor addObject: arg[0]];
+                }
+            }
+            for (FieldDefinition *fDecl in classDecl.fields) {
+                [needConvertersFor addObject: fDecl.type];
+            }
+        }
+    }
+    // Then we go through and make all those converters
 }
 
 @end

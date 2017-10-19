@@ -18,6 +18,7 @@
 		D97F6CC41F83042D00C5C6AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CC31F83042D00C5C6AA /* main.m */; };
 		D97F6CCF1F83075E00C5C6AA /* Alien.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CCE1F83075E00C5C6AA /* Alien.m */; };
 		D97F6CD41F833A3000C5C6AA /* CPPTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */; };
+		D995B29B1F98405B0050A1F3 /* TypeDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D995B29A1F98405B0050A1F3 /* TypeDeclarationTests.m */; };
 		D9A955901F956B42007F3D8E /* TypeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A9558F1F956B42007F3D8E /* TypeTests.m */; };
 		D9A955941F95BD0D007F3D8E /* MethodDefinitionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A955931F95BD0D007F3D8E /* MethodDefinitionTests.m */; };
 		D9D83DAE1F94F72C00FC9957 /* TypeDeclaration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D83DAD1F94F72C00FC9957 /* TypeDeclaration.m */; };
@@ -76,6 +77,7 @@
 		D97F6CCE1F83075E00C5C6AA /* Alien.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Alien.m; sourceTree = "<group>"; };
 		D97F6CD31F833A3000C5C6AA /* CPPTokenizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPPTokenizer.m; sourceTree = "<group>"; };
 		D97F6CD51F833A4200C5C6AA /* CPPTokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPPTokenizer.h; sourceTree = "<group>"; };
+		D995B29A1F98405B0050A1F3 /* TypeDeclarationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeDeclarationTests.m; sourceTree = "<group>"; };
 		D9A9558F1F956B42007F3D8E /* TypeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TypeTests.m; sourceTree = "<group>"; };
 		D9A955931F95BD0D007F3D8E /* MethodDefinitionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodDefinitionTests.m; sourceTree = "<group>"; };
 		D9D83DAC1F94F72C00FC9957 /* TypeDeclaration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TypeDeclaration.h; sourceTree = "<group>"; };
@@ -162,12 +164,13 @@
 		D9F550FE1F8BF92D00201D7D /* Alien-Tests */ = {
 			isa = PBXGroup;
 			children = (
+				D92329A21F8C66ED00005A26 /* ParserTests.m */,
 				D9F550FF1F8BF92D00201D7D /* TokenizerTests.m */,
 				D9F551011F8BF92D00201D7D /* Info.plist */,
-				D92329A21F8C66ED00005A26 /* ParserTests.m */,
 				D92329A41F8C7D3600005A26 /* TypeManagerTests.m */,
 				D9A9558F1F956B42007F3D8E /* TypeTests.m */,
 				D9A955931F95BD0D007F3D8E /* MethodDefinitionTests.m */,
+				D995B29A1F98405B0050A1F3 /* TypeDeclarationTests.m */,
 			);
 			path = "Alien-Tests";
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				D9D83DAF1F94F73700FC9957 /* TypeDeclaration.m in Sources */,
 				D9D960FE1F9310D700D6B6F7 /* Type.m in Sources */,
 				D93DE31B1F91CDCE00C92A4B /* Stack.m in Sources */,
+				D995B29B1F98405B0050A1F3 /* TypeDeclarationTests.m in Sources */,
 				D9463E8E1F91C34A0071DAB3 /* ParserState.m in Sources */,
 				D92329A31F8C66ED00005A26 /* ParserTests.m in Sources */,
 				D9F5510E1F8C002400201D7D /* TypeManager.m in Sources */,

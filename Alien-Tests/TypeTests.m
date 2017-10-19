@@ -77,5 +77,67 @@
     XCTAssert([[t typeForNS] isEqualTo: @"NSMutableDictionary<int,NSString *> *"]);
 }
 
+- (void)testCppString {
+    Type *t = [[Type alloc] init];
+    t.typeDecl = [TypeDeclaration stringType];
+    [[t typeForCpp] isEqualTo: @"std::string"];
+}
+
+- (void)testCppVector {
+    Type *t = [[Type alloc] init];
+    t.typeDecl = [TypeDeclaration vectorType];
+    Type *subType = [[Type alloc] init];
+    subType.typeDecl = [TypeDeclaration stringType];
+    [t.typeParameters addObject: subType];
+    [[t typeForCpp] isEqualTo: @"std::vector<std::string>"];
+}
+
+- (void)testEqualReflexive {
+    Type *t = [[Type alloc] init];
+    t.typeDecl = [TypeDeclaration mapType];
+    XCTAssert([t isEqual: t]);
+}
+
+- (void)testEqualSymmetric {
+    Type *t = [[Type alloc] init];
+    t.typeDecl = [TypeDeclaration intType];
+    t.indirectionCount = 1;
+    t.constPtr = true;
+    Type *t2 = [[Type alloc] init];
+    t2.typeDecl = [TypeDeclaration intType];
+    t2.indirectionCount = 1;
+    t2.constPtr = true;
+    XCTAssert([t isEqual: t2] && [t2 isEqual: t]);
+}
+
+- (void)testEqualTransitive {
+    Type *t = [[Type alloc] init];
+    t.typeDecl = [TypeDeclaration intType];
+    t.indirectionCount = 1;
+    t.constPtr = true;
+    Type *t2 = [[Type alloc] init];
+    t2.typeDecl = [TypeDeclaration intType];
+    t2.indirectionCount = 1;
+    t2.constPtr = true;
+    Type *t3 = [[Type alloc] init];
+    t3.typeDecl = [[TypeDeclaration alloc] initWithName: @"int" inNamespace: nil];
+    t3.indirectionCount = 1;
+    t3.constPtr = true;
+    XCTAssert([t isEqual: t2] && [t2 isEqual: t3] && [t isEqual: t3]);
+}
+
+//- (void) testIntConverter {
+//    Type *t = [[Type alloc] init];
+//    t.typeDecl = [TypeDeclaration intType];
+//    NSString *conv = [t convertToCpp: @"arg1" dest: @"arg2"];
+//    XCTAssert([conv isEqualTo: @"int arg1 = arg2;"]);
+//}
+//
+//- (void) testStringConverter {
+//    Type *t = [[Type alloc] init];
+//    t.typeDecl = [TypeDeclaration stringType];
+//    NSString *conv = [t convertToCpp: @"arg1" dest: @"arg2"];
+//    XCTAssert([conv isEqualTo: @"std::string arg1 = [arg2 UTF8String];"]);
+//}
 
 @end

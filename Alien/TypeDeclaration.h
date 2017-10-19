@@ -11,7 +11,7 @@
 @interface TypeDeclaration : NSObject
 {
     @private
-    NSString *_convertBlockNSBase;
+    NSString *_convertBlockCppBase;
     NSString *_typeInitNS;
 }
 
@@ -19,15 +19,20 @@
 @property NSString *containingNamespace;
 @property NSUInteger nTypeParameters;
 @property NSString *customName;
-@property NSString *convertBlockNSBase;
-@property (getter=typeInitNS, setter=setTypeInitNS:) NSString *typeInitNS;
+@property (getter=typeInitCpp, setter=setTypeInitCpp:) NSString *typeInitCpp;
+@property NSString *insertionNS;
+@property NSString *insertionCpp;
+@property NSString *convertCpp;
+@property NSString *convertNS;
 
 -(id)init;
 -(id) initWithName: (NSString *) name inNamespace: (NSString *)ns;
 -(id) initWithName: (NSString *) name inNamespace: (NSString *)ns withCustomName: (NSString *) otherName;
 -(id) initWithName: (NSString *) name inNamespace: (NSString *)ns withParams: (NSUInteger) nParams;
-- (NSString *) nameforNS;
-- (NSString *) convertBlockNS: (NSString *) src to: (NSString *) dst;
+-(BOOL)isEqual:(id)object;
+-(NSUInteger)hash;
+- (NSString *) nameForNS;
+- (NSString *) nameForCpp;
 
 + (TypeDeclaration *)doubleType;
 + (TypeDeclaration *)floatType;
@@ -38,6 +43,5 @@
 + (TypeDeclaration *)vectorType;
 + (TypeDeclaration *)mapType;
 + (TypeDeclaration *)boolType;
-
 
 @end

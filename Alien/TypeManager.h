@@ -39,6 +39,6 @@
 
 - (void) addType: (ClassDeclaration *) ty;
 
-- (void) generateTypeConverters;
+- (void) generateConversions;
 
 @end

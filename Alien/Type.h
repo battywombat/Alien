@@ -22,13 +22,17 @@
 -(id)init;
 
 -(id)initWithType: (TypeDeclaration *) type;
+-(NSUInteger)hash;
 
 -(NSString *)typeForNS;
+-(NSString *)typeForCpp;
 
 -(NSString *)typeWithParens;
 
--(NSString *)convertToNS: (NSString *) srcDecl dest: (NSString *) destDecl;
+-(NSString *)typeConvertCpp;
 
 -(BOOL)addQualifier: (NSString *) qualifier;
+
+-(BOOL)isEqual:(id)object;
 
 @end

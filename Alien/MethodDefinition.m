@@ -62,27 +62,8 @@
     return s;
 }
 
-- (NSString *)createNSBody { 
-    NSMutableString *s = [[NSMutableString alloc] init];
-    [s appendString: [self createNSHeader]];
-    [s appendString: @"{\n"];
-    // first let's convert our arguments
-    NSMutableString *argString;
-    Type *t;
-    NSString *argName;
-    int i = 0;
-    for (NSArray *arg in _arguments) {
-        argString = [[NSMutableString alloc] init];
-        t = arg[0];
-        argName = arg[1];
-        [s appendString: [t convertToNS: argString dest:[NSString stringWithFormat: @"_arg%d", i]]];
-        i++;
-    }
-    [s appendString: @"}\n"];
-    return s;
-}
-
-- (NSString *)methodCall {
+- (NSString *)createNSBody {
+    // TODO: implement this
     return nil;
 }
 
