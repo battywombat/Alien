@@ -81,7 +81,7 @@
     return [self type: NO];
 }
 
-- (NSString *)typeConvertCallCpp {
+- (NSString *)typeConvertCpp {
     if (_typeDecl.insertionCpp != nil) { // If we have an insertion call, generate a function name
         NSMutableString *s = [[NSMutableString alloc] init];
         [s appendString: [NSString stringWithFormat: @"__convert%@", _typeDecl.name]];
